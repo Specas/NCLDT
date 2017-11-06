@@ -19,4 +19,11 @@ size_y_max = 100;
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
 
+%Selecting the start and end configurations
+fprintf('Click to select the start configuration.\n');
+q_start = setConfiguration2D(fig, ax);
+
+fprintf('Click to select the end configuration.\n');
+q_end = setConfiguration2D(fig, ax);
+
 
