@@ -1,25 +1,5 @@
 %Create a 2D workspace after creating obstacles by user input
-
-clc
-clear
-
-addpath('../Plotting/');
-
-%Setting space limits and initializing figure
-size_x_min = -100;
-size_x_max = 100;
-size_y_min = -100;
-size_y_max = 100;
-
-% figure('Name','2D Space','NumberTitle','off')
-% ax = axes;
-% grid on;
-% xlabel('x');
-% ylabel('y');
-% xlim(ax, [size_x_min size_x_max]);
-% ylim(ax, [size_y_min size_y_max]);
-[fig, ax] = initializeFigure('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
-
+function[fig, ax, obstacle_coords] = createObstacles2D(fig, ax)
 
 %User input is taken for the obstacles and is dynamically drawn
 obstacle_coords = {};
@@ -45,8 +25,8 @@ while true
     end
     
     drawDynamicObstaclesClick2D(obstacle_coords, obstacle_count, ax);
-
-
+    
+    
 end
 
 
