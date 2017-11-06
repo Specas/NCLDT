@@ -42,9 +42,12 @@ while true
     
     drawDynamicObstaclesClick2D(obstacle_coords, obstacle_count, ax);
 
-    
-    
+
 end
+
+figure;
+ax1 = axes;
+drawObstacles2D(ax1, obstacle_coords);
 
 
 
