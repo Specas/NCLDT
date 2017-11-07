@@ -38,6 +38,9 @@ if d == 0
         valid_intersection = 0;
     end
 end
+
+disp(d);
+disp(valid_intersection);
     
 
 

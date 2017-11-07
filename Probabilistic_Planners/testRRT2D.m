@@ -6,6 +6,9 @@ close all
 %Adding path
 addpath(genpath('..\Tools\'));
 
+%Docking figure
+set(0,'DefaultFigureWindowStyle','docked');
+
 size_x_min = -100;
 size_x_max = 100;
 size_y_min = -100;
@@ -16,8 +19,8 @@ ndim = 2;
 
 %Creating Obstacle in space
 [fig, ax] = initializeFigure('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
-[fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-
+% [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
+load('obstacle_coords.mat');
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
 
@@ -34,7 +37,7 @@ q_end = setConfiguration2D(fig, ax);
 start_pivot = size(start_connectivity, 2);
 end_pivot = size(start_connectivity, 2);
 
-path = [];
+path = start_nodes(end, :);
 
  while true
             
@@ -44,9 +47,9 @@ path = [];
 
     tmp_q = start_nodes(k, :);
     path = [tmp_q; path];
-    pivot_a = k;
+    start_pivot = k;
 
-    if(pivot_a==1)
+    if(start_pivot==1)
         break;
     end
 
@@ -60,9 +63,9 @@ path = [];
 
     tmp_q = end_nodes(k, :);
     path = [path; tmp_q];
-    pivot_b = k;
+    end_pivot = k;
 
-    if(pivot_b==1)
+    if(end_pivot==1)
         break;
     end
 
@@ -70,7 +73,7 @@ path = [];
 
  for i=1:size(path, 1)-1
      
-     plot(ax, [path(i, 1), path(i+1, 1)], [path(i, 2), path(i+1, 2)], 'g-');
+     plot(ax, [path(i, 1), path(i+1, 1)], [path(i, 2), path(i+1, 2)], 'k-');
  end
      
 
