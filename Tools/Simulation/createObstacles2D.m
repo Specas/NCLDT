@@ -1,5 +1,5 @@
 %Create a 2D workspace after creating obstacles by user input
-function[fig, ax, obstacle_coords] = createObstacles2D(fig, ax)
+function[fig, ax, obstacle_coords_final] = createObstacles2D(fig, ax)
 
 %User input is taken for the obstacles and is dynamically drawn
 obstacle_coords = {};
@@ -27,6 +27,12 @@ while true
     drawDynamicObstaclesClick2D(obstacle_coords, obstacle_count, ax);
     
     
+end
+
+%Removing the duplicate obstacle that gets stored at the end
+obstacle_coords_final = {};
+for i=1:length(obstacle_coords)-1
+    obstacle_coords_final{i} = obstacle_coords{i};
 end
 
 
