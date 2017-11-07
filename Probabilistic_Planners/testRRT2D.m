@@ -11,6 +11,7 @@ size_x_max = 100;
 size_y_min = -100;
 size_y_max = 100;
 
+lim = [size_x_min, size_x_max; size_y_min, size_y_max];
 
 %Creating Obstacle in space
 [fig, ax] = initializeFigure('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
@@ -25,5 +26,8 @@ q_start = setConfiguration2D(fig, ax);
 
 fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
+
+%Carrying out RRT
+
 
 
