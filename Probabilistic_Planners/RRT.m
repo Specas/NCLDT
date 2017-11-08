@@ -1,10 +1,19 @@
 %RRT code for arbitrary dimensions 
-function [start_nodes, start_connectivity, end_nodes, end_connectivity] = RRT(ax, obstacle_coords, q_start, q_end, ndim, lim)
+function [start_nodes, start_connectivity, end_nodes, end_connectivity] = RRT(ax, obstacle_coords, q_start, q_end, ndim, lim, varargin)
 
 start_nodes = q_start;
 end_nodes = q_end;
 start_connectivity = 0;
 end_connectivity = 0;
+is_animate = false;
+if nargin>6
+    %Animate
+    if strcmp(varargin{1}, 'Animate')
+        is_animate = true;
+    end
+    
+end
+    
 
 while true
 
@@ -14,7 +23,11 @@ while true
         q_sample = sampleConfiguration(ndim, lim);
     end
     
-    plot(ax, q_sample(1), q_sample(2), 'k.');
+    if is_animate
+        pause(0.2);
+    end
+    
+    plot(ax, q_sample(1), q_sample(2), 'k.', 'MarkerSize', 15);
     
     %Finding closes configurations in both trees
     diff_start = start_nodes - q_sample;
@@ -34,10 +47,9 @@ while true
         start_connectivity(end, min_ind_start) = 1;
         start_connectivity(min_ind_start, end) = 1;
         start_connected = true;
-        plot(ax, [q_sample(1), start_nodes(min_ind_start, 1)], [q_sample(2), start_nodes(min_ind_start, 2)], 'g-');
-        disp('A');
-        disp(start_connectivity);
-        pause;
+        if is_animate
+            plot(ax, [q_sample(1), start_nodes(min_ind_start, 1)], [q_sample(2), start_nodes(min_ind_start, 2)], 'g-', 'LineWidth', 2);
+        end
         
     end
     
@@ -48,10 +60,9 @@ while true
         end_connectivity(end, min_ind_end) = 1;
         end_connectivity(min_ind_end, end) = 1;
         end_connected = true;
-        plot(ax, [q_sample(1), end_nodes(min_ind_end, 1)], [q_sample(2), end_nodes(min_ind_end, 2)], 'g-');
-        disp('B');
-        disp(end_connectivity);
-        pause;
+        if is_animate
+            plot(ax, [q_sample(1), end_nodes(min_ind_end, 1)], [q_sample(2), end_nodes(min_ind_end, 2)], 'g-', 'LineWidth', 2);
+        end
         
     end
     

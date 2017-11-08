@@ -32,10 +32,10 @@ fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
 %Carrying out RRT
-[start_nodes, start_connectivity, end_nodes, end_connectivity] = RRT(ax, obstacle_coords, q_start, q_end, ndim, lim);
+[start_nodes, start_connectivity, end_nodes, end_connectivity] = RRT(ax, obstacle_coords, q_start, q_end, ndim, lim, 'Animate');
 
 start_pivot = size(start_connectivity, 2);
-end_pivot = size(start_connectivity, 2);
+end_pivot = size(end_connectivity, 2);
 
 path = start_nodes(end, :);
 
@@ -73,8 +73,8 @@ path = start_nodes(end, :);
 
  for i=1:size(path, 1)-1
      
-     plot(ax, [path(i, 1), path(i+1, 1)], [path(i, 2), path(i+1, 2)], 'k-');
+     plot(ax, [path(i, 1), path(i+1, 1)], [path(i, 2), path(i+1, 2)], 'k-', 'LineWidth', 2);
  end
-     
-
-
+disp('---------------------------------------------------'); 
+disp('Path Found');
+disp('---------------------------------------------------'); 
