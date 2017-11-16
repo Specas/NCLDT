@@ -12,7 +12,7 @@ sample_num = 0;
 
 while sample_num <= m
     
-    q_sample = sampleConfiguration(ndim, lim);
+    q_sample = sampleConfigurationNSphere(ndim, q_far, epsilon_min, epsilon_max);
     
     if isValidSampleNCLDT(q_sample, q_far, wt, alpha, epsilon_min, epsilon_max) && norm(q_sample - q_start) >= norm(q_far - q_start) && sample_num<=m
         sample_num = sample_num + 1;

@@ -1,4 +1,4 @@
-function [fig, ax] = initializeFigure(varargin)
+function [fig, ax] = initializeFigure2D(varargin)
 
 %Initializes a figure using variable input parameters. The input parameters
 %must follow the following order:
