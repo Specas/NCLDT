@@ -41,17 +41,16 @@ ws = -(q_start - q_root)/norm(q_start - q_root);
 T = q_root;
 q_far = q_root;
 
-alpha = 20*pi/180;
+alpha = 30*pi/180;
 epsilon_max = 10;
-epsilon_min = 3;
+epsilon_min = 1;
 m = 3;
 
-for i=1:50
+for i=1:10
     
     T = growSingleTreeNCLDT(fig, ax, q_start, q_end, q_root, q_far, T, ws, wt, alpha, epsilon_min, epsilon_max, m, ndim, lim);
     q_far = findFarthestNode(T, q_root);
-%     q_far = T(end, :);
-    plot(ax, q_far(1), q_far(2), 'c.');
+%     plot(ax, q_far(1), q_far(2), 'c.');
 end
 
 
