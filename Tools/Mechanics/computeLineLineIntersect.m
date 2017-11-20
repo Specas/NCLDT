@@ -3,7 +3,7 @@
 %intersection.
 %If they intersect, it also returns a flag that represents if the
 %intersection point lies within both the vector lines
-function [pi, qi, d, valid_intersection] = vectorIntersect(p1, p2, q1, q2)
+function [pi, qi, d, valid_intersection] = computeLineLineIntersect(p1, p2, q1, q2)
 
 A = dot(q1 - p1, p2 - p1);
 B = dot(q2 - q1, p2 - p1);

@@ -13,7 +13,7 @@ for i=1:length(obstacle_coords)
         p1 = coord(start_ind, :);
         p2 = coord(end_ind, :);
         
-        [~, ~, ~, valid_intersection] = vectorIntersect(p1, p2, q1, q2);
+        [~, ~, ~, valid_intersection] = computeLineLineIntersect(p1, p2, q1, q2);
         if valid_intersection == 1
             ret = false;
         end
