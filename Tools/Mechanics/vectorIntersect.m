@@ -39,8 +39,6 @@ if d == 0
     end
 end
 
-% disp(d);
-% disp(valid_intersection);
     
 
 

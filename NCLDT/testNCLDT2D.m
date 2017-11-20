@@ -41,7 +41,7 @@ ws = -(q_start - q_root)/norm(q_start - q_root);
 T = q_root;
 q_far = q_root;
 
-alpha = 30*pi/180;
+alpha = -0.5*pi/180;
 epsilon_max = 20;
 epsilon_min = 5;
 m = 3;

@@ -10,7 +10,6 @@ sample_num = 0;
 while sample_num < m
     
     q_sample = sampleConfigurationNSphere(ndim, q_far, epsilon_min, epsilon_max);
-%     disp(q_sample);
     if isValidSampleNCLDT(q_sample, q_far, wt, alpha)
         sample_num = sample_num + 1;
         q_m = [q_m; q_sample];
