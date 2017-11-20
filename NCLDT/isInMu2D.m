@@ -1,5 +1,5 @@
 %Function to take in a particular configuration value and return if it lies
-%in the set eta
+%in the set mu
 
 %INPUTS:
 %qi: The configuration point under consideration
@@ -7,13 +7,13 @@
 %obstacle_coords: Structure of 2D obstacle coordinates
 
 %OUTPUTS:
-%ret: A boolean value that is true if qi lies in the set eta
-function ret = isInEta2D(qi, rho, wt, obstacle_coords)
+%ret: A boolean value that is true if qi lies in the set mu
+function ret = isInMu2D(qi, rho, ws, obstacle_coords)
 
 ret = false;
 
 %Computing the new point at a distance rho from qi in the direction of wt
-qi_rho = qi + rho*wt;
+qi_rho = qi + rho*ws;
 
 free = isConfigInFree2D(qi_rho, obstacle_coords);
 
