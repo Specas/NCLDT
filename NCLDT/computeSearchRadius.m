@@ -15,9 +15,5 @@
 function rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3)
 
 h3 = exp(-k1*round(norm(wt_current - wt), 3));
-% disp(wt_current);
-% disp(wt);
-% disp(round(norm(wt_current - wt), 3));
-% disp(h3);
 rho_current = k3*h3*rho_current + (1 - h3)*rho_init;
 
