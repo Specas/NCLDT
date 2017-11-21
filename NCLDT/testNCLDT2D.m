@@ -42,6 +42,7 @@ ws = -(q_start - q_root)/norm(q_start - q_root);
 
 T = q_root;
 Tm = T;
+path = [];
 q_pivot = q_root;
 
 %NCLDT parameters
@@ -86,6 +87,8 @@ while ~done
         q_pivot = findNearestNode(eta, q_root);
     end
     
+    path = [path; q_pivot];
+    
     %Setting epsilon_min and epsilon_max depending on rho
     epsilon_min = rho_init;
     epsilon_max = rho_current;
@@ -102,14 +105,18 @@ while ~done
         if isCollisionFreePath2D(Tm(j, :), q_end, obstacle_coords)
             %Path is found
             plot(ax, [Tm(j, 1), q_end(1)], [Tm(j, 2), q_end(2)], 'k-');
+            path = [path; Tm(j, :)];
+            path = [path; q_end];
             done = true;
         end
     end
     
-    
 %     pause;
+end
 
-    
+%Drawing the final path if a path exists
+if done
+    drawPath(fig, ax, path);
 end
 
 
