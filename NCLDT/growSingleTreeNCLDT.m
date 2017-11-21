@@ -24,6 +24,8 @@ function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_far, T, wt_current, alpha, ep
 q_m = [];
 sample_num = 0;
 
+epsilon_decay = 0.99;
+
 while sample_num < m
     
     q_sample = sampleConfigurationNSphere(ndim, q_far, epsilon_min, epsilon_max);
@@ -32,6 +34,9 @@ while sample_num < m
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
         pause(0.1);
+    else
+        epsilon_min = epsilon_min * epsilon_decay;
+        epsilon_max = epsilon_max * epsilon_decay;
     end
     
 end

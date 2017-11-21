@@ -46,10 +46,10 @@ q_pivot = q_root;
 
 %NCLDT parameters
 alpha = 45*pi/180;
-epsilon_max = 7;
-epsilon_min = 5;
-m = 3;
-rho_init = 0.1;
+epsilon_max = 0;
+epsilon_min = 0;
+m = 5;
+rho_init = 10;
 k1 = 10^5;
 k2 = 10^-5;
 k3 = 10;
@@ -59,13 +59,11 @@ wt_current = wt;
 
 %Current obstacle search radius
 rho_current = rho_init;
-% disp(rho_current);
 
 done = false;
 
 while ~done
-    
-
+        
     rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
     [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords);
     
@@ -87,6 +85,10 @@ while ~done
     else
         q_pivot = findNearestNode(eta, q_root);
     end
+    
+    %Setting epsilon_min and epsilon_max depending on rho
+    epsilon_min = rho_init;
+    epsilon_max = rho_current;
     
     [T, Tm] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim); 
 
