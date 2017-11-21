@@ -3,7 +3,7 @@
 
 %INPUTS:
 %qi: The configuration point under consideration
-%rho: The radius that is used to update the direction of growth
+%rho: The radius of obstacle search for the current iteration
 %obstacle_coords: Structure of 2D obstacle coordinates
 
 %OUTPUTS:
