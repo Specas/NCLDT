@@ -44,14 +44,14 @@ T = q_root;
 q_far = q_root;
 
 %NCLDT parameters
-alpha = 30*pi/180;
-epsilon_max = 15;
-epsilon_min = 7;
-m = 6;
-rho_init = 1;
+alpha = 45*pi/180;
+epsilon_max = 20;
+epsilon_min = 5;
+m = 5;
+rho_init = 0.1;
 k1 = 10^5;
 k2 = 10^-5;
-k3 = 1.5;
+k3 = 2;
 
 %Current direction of growth
 wt_current = wt;
@@ -65,19 +65,30 @@ done = false;
 while ~done
     
     [T, Tm] = growSingleTreeNCLDT(fig, ax, q_far, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim);
-    q_far = findFarthestNode(Tm, q_root);
-    plot(ax, q_far(1), q_far(2), 'c.');
+    
+    
 
     rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
     [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords);
+    
+    q_far = 0;
     
     %Non-decay condition
     if size_eta == 0 & size_mu == 0
         fprintf('Decay\n');
         break;
     else
-        wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);    
+        wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);  
     end
+    
+    %Finding the farthest node from eta or mu (depending on their values)
+    if size_eta == 0 
+        q_far = findFarthestNode(mu, q_root); 
+    else
+        q_far = findFarthestNode(eta, q_root);
+    end
+    
+    plot(ax, q_far(1), q_far(2), 'c.');
     
     for j=size(Tm, 1)
         if isCollisionFreePath2D(Tm(j, :), q_end, obstacle_coords)

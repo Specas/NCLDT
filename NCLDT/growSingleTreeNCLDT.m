@@ -27,7 +27,7 @@ sample_num = 0;
 while sample_num < m
     
     q_sample = sampleConfigurationNSphere(ndim, q_far, epsilon_min, epsilon_max);
-    if isValidSampleNCLDT(q_sample, q_far, wt_current, alpha) & isConfigInFree2D(q_sample, obstacle_coords)
+    if isValidSampleNCLDT(q_sample, q_far, wt_current, alpha) & isConfigInFree2D(q_sample, obstacle_coords) & isCollisionFreePath2D(q_far, q_sample, obstacle_coords)
         sample_num = sample_num + 1;
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
