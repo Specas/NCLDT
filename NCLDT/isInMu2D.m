@@ -21,7 +21,7 @@ for i=1:length(obstacle_coords)
         p1 = obstacle_coords{i}(j, :);
         p2 = obstacle_coords{i}(1, :);
         if j ~= size(obstacle_coords{i}, 1)
-            p2 = obstacle_coords{i}(j+1, 1)
+            p2 = obstacle_coords{i}(j+1, 1);
         end
         
         [~, ~, ~, valid_intersection] = computeLineLineIntersect(p1, p2, qi, qi_rho);

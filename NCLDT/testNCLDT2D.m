@@ -41,17 +41,18 @@ ws = -(q_start - q_root)/norm(q_start - q_root);
 
 
 T = q_root;
-q_far = q_root;
+Tm = T;
+q_pivot = q_root;
 
 %NCLDT parameters
 alpha = 45*pi/180;
 epsilon_max = 20;
 epsilon_min = 5;
-m = 5;
-rho_init = 0.1;
+m = 3;
+rho_init = 1;
 k1 = 10^5;
 k2 = 10^-5;
-k3 = 5;
+k3 = 10;
 
 %Current direction of growth
 wt_current = wt;
@@ -64,14 +65,13 @@ done = false;
 
 while ~done
     
-    [T, Tm] = growSingleTreeNCLDT(fig, ax, q_far, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim);
-    
-    
 
     rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
     [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords);
     
-    q_far = 0;
+    fprintf('%d, %d, %3f\n', size_eta, size_mu, rho_current);
+
+    q_pivot = 0;
     
     %Non-decay condition
     if size_eta == 0 & size_mu == 0
@@ -83,13 +83,19 @@ while ~done
     
     %Finding the farthest node from eta or mu (depending on their values)
     if size_eta == 0 
-        q_far = findFarthestNode(mu, q_root); 
+        q_pivot = findNearestNode(mu, q_root); 
     else
-        q_far = findFarthestNode(eta, q_root);
+        q_pivot = findNearestNode(eta, q_root);
     end
     
-    plot(ax, q_far(1), q_far(2), 'c.');
+    [T, Tm] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim); 
+
+    %Plotting pivot node
+    plot(ax, q_pivot(1), q_pivot(2), 'c.');
     
+    %Plotting direction
+    quiver(ax, q_pivot(1), q_pivot(2), 7*wt_current(1), 7*wt_current(2), 'g-');
+
     for j=size(Tm, 1)
         if isCollisionFreePath2D(Tm(j, :), q_end, obstacle_coords)
             %Path is found
@@ -98,8 +104,8 @@ while ~done
         end
     end
     
-    fprintf('%d, %d, %3f\n', size_eta, size_mu, rho_current);
-%     pause;
+    
+    pause;
 
     
 end
