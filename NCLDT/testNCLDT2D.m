@@ -46,10 +46,10 @@ q_pivot = q_root;
 
 %NCLDT parameters
 alpha = 45*pi/180;
-epsilon_max = 20;
+epsilon_max = 7;
 epsilon_min = 5;
 m = 3;
-rho_init = 1;
+rho_init = 0.1;
 k1 = 10^5;
 k2 = 10^-5;
 k3 = 10;
@@ -105,7 +105,7 @@ while ~done
     end
     
     
-    pause;
+%     pause;
 
     
 end
