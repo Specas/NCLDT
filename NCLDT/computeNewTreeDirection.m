@@ -1,12 +1,16 @@
 %Function that computes initial wt for a new tree
 
-%INPUTS:
+%INPUTS
 %Tnc_mag: Number of trees that have not connected to the target
 %T_mag: Total number of trees
-%qs: Sampled root node for the new tree
-%qn: The nearest node to the sampled root node
-%qntc: The nearest node to the sampled root node that is a part of a
+%q_root: New root node that is sampled
+%q_n: The nearest node to the sampled root node
+%q_ntc: The nearest node to the sampled root node that is a part of a
 %connected tree. Value is -1 if no trees are connected
+%q_end: End configuration
+
+%OUTPUT
+%wt: Initial direction the new tree should take
 
 
 function [] = computeNewTreeDirection(Tnc_mag, T_mag, q_root, q_n, q_ntc, q_end)
