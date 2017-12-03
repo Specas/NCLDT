@@ -16,7 +16,7 @@
 %T: New Tree node matrix
 %qm: Matrix of m nodes added in this iteration
 
-function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_far, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim)
+function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim)
 
 %Sampling in the biased space (epsilon ball with alpha constraint)
 %Sampling m points around an epsilon ball about the farthest point
@@ -28,8 +28,8 @@ epsilon_decay = 0.99;
 
 while sample_num < m
     
-    q_sample = sampleConfigurationNSphere(ndim, q_far, epsilon_min, epsilon_max);
-    if isValidSampleNCLDT(q_sample, q_far, wt_current, alpha) & isConfigInFree2D(q_sample, obstacle_coords) & isCollisionFreePath2D(q_far, q_sample, obstacle_coords)
+    q_sample = sampleConfigurationNSphere(ndim, q_pivot, epsilon_min, epsilon_max);
+    if isValidSampleNCLDT(q_sample, q_pivot, wt_current, alpha) & isConfigInFree2D(q_sample, obstacle_coords) & isCollisionFreePath2D(q_pivot, q_sample, obstacle_coords)
         sample_num = sample_num + 1;
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
