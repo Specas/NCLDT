@@ -51,5 +51,5 @@ if k <= fp*100
 else
     wt = (q_ntc - q_root)/norm(q_ntc - q_root);
 end
-    
+
 
