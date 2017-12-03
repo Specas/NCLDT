@@ -107,7 +107,7 @@ while ~done
             plot(ax, [Tm(j, 1), q_end(1)], [Tm(j, 2), q_end(2)], 'k-');
             path = [path; Tm(j, :)];
             path = [path; q_end];
-            done = true;
+            done = true; 
         end
     end
     
