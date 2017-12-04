@@ -80,7 +80,7 @@ while ~done
         wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);  
     end
     
-    %Finding the farthest node from eta or mu (depending on their values)
+    %Finding the nearest node from eta or mu (depending on their values)
     if size_eta == 0 
         q_pivot = findNearestNode(mu, q_root); 
     else

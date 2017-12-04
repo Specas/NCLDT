@@ -10,6 +10,7 @@ sample_num = 0;
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max epsilon_decay
 global eta mu eta_size mu_size
 global m q_root q_target q_pivot
+global tree_connected
 
 
 
