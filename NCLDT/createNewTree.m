@@ -29,8 +29,9 @@ Tm{end+1} = q_root{end};
 
 %Computing the direction of the trees probabilistically
 
-wt{end+1} = (q_end - q_root{end})/norm(q_end - q_root{end});
-% wt{end + 1} = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_ntc, q_end);
+% wt{end+1} = (q_end - q_root{end})/norm(q_end - q_root{end});
+[q_n, q_nnc] = findDecisionNodes(q_root{end});
+wt{end + 1} = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_nnc, q_end);
 ws{end+1} = -(q_start - q_root{end})/norm(q_start - q_root{end});
 
 q_target{end+1} = q_end;
