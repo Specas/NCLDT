@@ -163,6 +163,7 @@ while ~done
         %Check if there is a connection between q_start and any of the
         %connected (end or tree) trees roots
         if isCollisionFreePath2D(q_start, q_root{i}, obstacle_coords) & (tree_connected_end{i} | tree_connected_tree{i})
+            %Found a path from the start to one of the connected trees
             fprintf('Path Found\n');
             plot(ax, [q_start(1), q_root{i}(1)], [q_start(2), q_root{i}(2)], 'k-');
             done = true;

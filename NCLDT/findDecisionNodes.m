@@ -20,7 +20,7 @@ function [q_n, q_nnc] = findDecisionNodes(q_root)
 %To compute the closest node in a connected tree, we form the augmented
 %matrix using tree_connected to find the trees that have connected
 
-global tree_connected path
+global tree_connected_end tree_connected_tree path
 
 num_trees = length(path);
 
@@ -35,7 +35,7 @@ for i=1:num_trees
     %Computed all_nodes and connected_nodes
     all_nodes = [all_nodes; path{i}];
     
-    if tree_connected{i}
+    if tree_connected_end{i} | tree_connected_tree{i}
         connected_nodes = [connected_nodes; path{i}];
     end
 end
