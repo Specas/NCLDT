@@ -47,15 +47,15 @@ epsilon_min_init = 3;
 m_init = 5;
 rho_init = 0.1;
 epsilon_decay_init = 1.0;
-k1 = 10^5;
-k2 = 10^-5;
+k1 = 10^9;
+k2 = 10^-9;
 k3 = 5;
 
 %Specify number of initial trees
-num_trees=5;
+num_trees = 5;
 
 %Number of total trees and non connected trees
-num_nctrees = 5;
+num_nctrees = num_trees;
 
 %Initializing tree parameters as empty cells
 T={}; Tm={}; path={}; wt={}; ws={}; wt_current={}; rho_current={}; alpha={};
@@ -79,7 +79,14 @@ done= false;
 
 while ~done
     
-    fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+    if num_trees<20
+        createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+        num_trees = num_trees + 1;
+        num_nctrees = num_nctrees + 1;
+    end
+
+        
+%     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
 
     for i=1:num_trees
         if tree_connected{i} | tree_decay{i}
@@ -128,15 +135,17 @@ while ~done
             if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)
                 
                 %Path is found
-                plot(ax, [Tm{i}(j, 1), q_end(1)], [Tm{i}(j, 2), q_end(2)], 'k-');
+                plot(ax, [Tm{i}(j, 1), q_target{i}(1)], [Tm{i}(j, 2), q_target{i}(2)], 'k-');
                 path{i} = [path{i}; Tm{i}(j, :)];
-                path{i} = [path{i}; q_end];
+                path{i} = [path{i}; q_target{i}];
                 tree_connected{i} = true;
                 
                 %Check if it connected to the q_end and change the number
                 %of connected trees
                 if q_target{i} == q_end
                     num_nctrees = num_nctrees - 1;
+                else
+                    plot(ax, q_target{i}(1), q_target{i}(2), 'r.', 'MarkerSize', 10);
                 end
             end
             

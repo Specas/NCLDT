@@ -9,7 +9,7 @@
 %epsilon_decay_init: Default initial epsilon_decay value for each tree
 %m_init: Default number of sampling points for each tree
 %rho_init: Default initial value of rho
-%num_trees: Total number of trees 
+%num_trees: Total number of trees
 %num_nctrees: Total number of non-connected trees
 %obstacle_coords: Structure containing the coordinates of the obstacles in
 %the workspace
@@ -49,25 +49,26 @@ Tm{end+1} = q_root{end};
 
 % wt{end+1} = (q_end - q_root{end})/norm(q_end - q_root{end});
 [q_n, q_nnc] = findDecisionNodes(q_root{end});
-wt{end + 1} = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_nnc, q_end);
-ws{end+1} = -(q_start - q_root{end})/norm(q_start - q_root{end});
+[wt{end + 1}, q_target{end + 1}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_nnc, q_end);
+ws{end + 1} = -(q_start - q_root{end})/norm(q_start - q_root{end});
 
-q_target{end+1} = q_end;
+% q_target{end + 1} = q_end;
 
 %Current direction of growth
-wt_current{end+1} = wt{end};
+wt_current{end + 1} = wt{end};
 
 %Variable along which you sample
-q_pivot{end+1} = q_root{end};
+q_pivot{end + 1} = q_root{end};
 
 %Current obstacle search radius=
-rho_current{end+1} = rho_init;
+rho_current{end + 1} = rho_init;
 
-alpha{end+1} = alpha_init;
-epsilon_min{end+1}= epsilon_min_init;
-epsilon_max{end+1}= epsilon_max_init;
-epsilon_decay{end+1}= epsilon_decay_init;
+alpha{end + 1} = alpha_init;
+epsilon_min{end + 1}= epsilon_min_init;
+epsilon_max{end + 1}= epsilon_max_init;
+epsilon_decay{end + 1}= epsilon_decay_init;
 
-m{end+1} = m_init;
+m{end + 1} = m_init;
+
 end
 

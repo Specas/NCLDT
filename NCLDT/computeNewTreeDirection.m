@@ -11,17 +11,19 @@
 
 %OUTPUT
 %wt: Initial direction the new tree should take
+%q_target: The target configuration depending on the probabilistic decision
 
 
-function [wt] = computeNewTreeDirection(num_nctrees, num_trees, q_root, q_n, q_ntc, q_end)
+function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, q_root, q_n, q_nnc, q_end)
 
 wt = 0;
+q_target = 0;
 fp = 0;
 a = 20;
 
 %If no trees are connected, then the probability of the new node directing
 %to the target = 1
-if q_ntc == -1
+if q_nnc == -1
     fp = 1;
     
 else
@@ -34,7 +36,7 @@ else
     %connected trees. Needs to override x if the sample configuration is
     %very close to a node in a connected tree
     
-    d = norm(q_n - q_ntc);
+    d = norm(q_n - q_nnc);
     g2 = d/(a + d);
     
     fp = g1*g2;
@@ -48,8 +50,11 @@ end
 k = 1 + rand*99;
 if k <= fp*100
     wt = (q_end - q_root)/norm(q_end - q_root);
+    q_target = q_end;
 else
-    wt = (q_ntc - q_root)/norm(q_ntc - q_root);
+    disp('New Direction');
+    wt = (q_nnc - q_root)/norm(q_nnc - q_root);
+    q_target = q_nnc;
 end
 
 
