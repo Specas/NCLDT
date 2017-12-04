@@ -16,15 +16,13 @@
 %T: New Tree node matrix
 %qm: Matrix of m nodes added in this iteration
 
-function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim)
+function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, epsilon_decay, m, obstacle_coords, ndim)
 
 %Sampling in the biased space (epsilon ball with alpha constraint)
 %Sampling m points around an epsilon ball about the farthest point
 
 q_m = [];
 sample_num = 0;
-
-epsilon_decay = 0.99;
 
 while sample_num < m
     

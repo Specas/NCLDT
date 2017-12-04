@@ -46,7 +46,7 @@ epsilon_max_init = 10;
 epsilon_min_init = 3;
 m_init = 5;
 rho_init = 0.1;
-epsilon_decay_init = 0.99;
+epsilon_decay_init = 1.0;
 k1 = 10^5;
 k2 = 10^-5;
 k3 = 5;
@@ -78,11 +78,13 @@ end
 done= false;
 
 while ~done
+    
+    fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+
     for i=1:num_trees
         if tree_connected{i} | tree_decay{i}
             continue
         end
-%         growAllTreesNCLDT(fig, ax, i, obstacle_coords, ndim)
         
         rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
         [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt{i}, ws{i}, obstacle_coords);
@@ -91,7 +93,10 @@ while ~done
         if eta_size{i} == 0 & mu_size{i} == 0
             tree_decay{i} = true;
             fprintf('Decay Tree:');
-            fprintf("%d\n",i);   
+            fprintf("%d\n",i);
+            
+            %Once the tree has decayed, the algorithm moves on to the next
+            %tree
             continue;
         else
             wt_current{i} = computeGrowthDirection(eta_size{i}, mu_size{i}, wt{i}, ws{i}, k1, k2);
@@ -111,7 +116,7 @@ while ~done
         epsilon_min{i} = rho_init;
         epsilon_max{i} = rho_current{i};
         
-        [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, m{i}, obstacle_coords, ndim);
+        [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim);
         
         %Plotting pivot node
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');
@@ -133,7 +138,6 @@ while ~done
                 if q_target{i} == q_end
                     num_nctrees = num_nctrees - 1;
                 end
-                %done = true;
             end
             
         end

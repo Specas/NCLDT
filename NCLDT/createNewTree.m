@@ -1,5 +1,23 @@
 %Function to create a new tree node
 
+%INPUT
+%q_start: The start configuration
+%q_end: The end or goal configuration
+%alpha_init: Default initial value of alpha for each tree
+%epsilon_max_init: Default initial epsilon_max value for each tree
+%epsilon_min_init: Default initial epsilon_min value for each tree
+%epsilon_decay_init: Default initial epsilon_decay value for each tree
+%m_init: Default number of sampling points for each tree
+%rho_init: Default initial value of rho
+%num_trees: Total number of trees 
+%num_nctrees: Total number of non-connected trees
+%obstacle_coords: Structure containing the coordinates of the obstacles in
+%the workspace
+%ndim: Number of dimensions
+%lim: Limits of the configuration space
+
+%OUTPUT
+%The function only changes global NCLDT values
 
 
 function [] = createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim)
