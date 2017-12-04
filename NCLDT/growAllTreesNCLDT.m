@@ -1,10 +1,17 @@
-function [] = growAllTreesNCLDT(fig, ax, ind, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, epsilon_decay, m, obstacle_coords, ndim)
+function [] = growAllTreesNCLDT(fig, ax, ind, obstacle_coords, ndim)
 
 %Grow the trees of the particular index taking the NCLDT parameters for
 %that particular index
 
 q_m = [];
 sample_num = 0;
+
+%Global parameters for each tree
+global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max epsilon_decay
+global eta mu eta_size mu_size
+global m q_root q_target q_pivot
+
+
 
 while sample_num < m{ind}
     
@@ -23,5 +30,6 @@ end
 
 %Connecting edges
 T{ind} = [T{ind}; q_m];
+Tm{ind} = q_m;
 
 

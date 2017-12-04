@@ -2,10 +2,10 @@
 
 
 
-function [] = createNewTree(q_start,q_end, alpha_init,epsilon_max_init,epsilon_min_init,m_init,rho_init,obstacle_coords, ndim, lim)
+function [] = createNewTree(q_start,q_end, alpha_init,epsilon_max_init,epsilon_min_init, epsilon_decay_init,m_init,rho_init,obstacle_coords, ndim, lim)
 
 %Global parameters for each tree
-global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max
+global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max epsilon_decay
 global eta mu eta_size mu_size
 global m q_root q_target q_pivot
 
@@ -39,6 +39,8 @@ rho_current{end+1} = rho_init;
 alpha{end+1} = alpha_init;
 epsilon_min{end+1}= epsilon_min_init;
 epsilon_max{end+1}= epsilon_max_init;
+epsilon_decay{end+1}= epsilon_decay_init;
+
 m{end+1} = m_init;
 end
 
