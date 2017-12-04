@@ -51,15 +51,18 @@ k1 = 10^5;
 k2 = 10^-5;
 k3 = 5;
 
+%Specify number of initial trees
+num_trees=5;
+
+%Number of total trees and non connected trees
+num_nctrees = 5;
+
 %Initializing tree parameters as empty cells
 T={}; Tm={}; path={}; wt={}; ws={}; wt_current={}; rho_current={}; alpha={};
 epsilon_min={}; epsilon_max={};
 eta={}; mu={}; eta_size={}; mu_size={};  m={}; q_root={}; q_target ={}; q_pivot={}; epsilon_decay={};
 tree_connected={};
 tree_decay={};
-
-%Specify number of initial trees
-num_trees=5;
 
 %Selecting the start and end configurations
 fprintf('Click to select the start configuration.\n');
@@ -69,7 +72,7 @@ fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
 for i=1:num_trees
-    createNewTree(q_start,q_end, alpha_init,epsilon_max_init,epsilon_min_init,epsilon_decay_init,m_init,rho_init,obstacle_coords, ndim, lim);
+    createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
 end
 
 done= false;
@@ -79,7 +82,7 @@ while ~done
         if tree_connected{i} | tree_decay{i}
             continue
         end
-        growAllTreesNCLDT(fig, ax, i, obstacle_coords, ndim)
+%         growAllTreesNCLDT(fig, ax, i, obstacle_coords, ndim)
         
         rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
         [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt{i}, ws{i}, obstacle_coords);
@@ -88,9 +91,8 @@ while ~done
         if eta_size{i} == 0 & mu_size{i} == 0
             tree_decay{i} = true;
             fprintf('Decay Tree:');
-            fprintf("%d\n",i);
-            
-            %             break;
+            fprintf("%d\n",i);   
+            continue;
         else
             wt_current{i} = computeGrowthDirection(eta_size{i}, mu_size{i}, wt{i}, ws{i}, k1, k2);
         end
@@ -118,15 +120,22 @@ while ~done
         quiver(ax, q_pivot{i}(1), q_pivot{i}(2), 7*wt_current{i}(1), 7*wt_current{i}(2), 'g-');
         
         for j=size(Tm{i}, 1)
-            if isCollisionFreePath2D(Tm{i}(j, :), q_end, obstacle_coords)
+            if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)
                 
                 %Path is found
                 plot(ax, [Tm{i}(j, 1), q_end(1)], [Tm{i}(j, 2), q_end(2)], 'k-');
                 path{i} = [path{i}; Tm{i}(j, :)];
                 path{i} = [path{i}; q_end];
                 tree_connected{i} = true;
-                %                 done = true;
+                
+                %Check if it connected to the q_end and change the number
+                %of connected trees
+                if q_target{i} == q_end
+                    num_nctrees = num_nctrees - 1;
+                end
+                %done = true;
             end
+            
         end
     end
 end

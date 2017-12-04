@@ -2,7 +2,7 @@
 
 
 
-function [] = createNewTree(q_start,q_end, alpha_init,epsilon_max_init,epsilon_min_init, epsilon_decay_init,m_init,rho_init,obstacle_coords, ndim, lim)
+function [] = createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim)
 
 %Global parameters for each tree
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max epsilon_decay
@@ -12,7 +12,7 @@ global tree_connected
 global tree_decay
 
 %Initializng paramters for each tree
-Tm{end+1} = [];
+
 path{end+1} = [];
 
 mu{end+1} = [];
@@ -25,8 +25,12 @@ tree_decay{end+1} = false;
 %Sampling new root node for the tree
 q_root{end+1} = sampleConfigurationFree(obstacle_coords, ndim, lim);
 T{end+1} = q_root{end};
+Tm{end+1} = q_root{end};
+
+%Computing the direction of the trees probabilistically
 
 wt{end+1} = (q_end - q_root{end})/norm(q_end - q_root{end});
+% wt{end + 1} = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_ntc, q_end);
 ws{end+1} = -(q_start - q_root{end})/norm(q_start - q_root{end});
 
 q_target{end+1} = q_end;

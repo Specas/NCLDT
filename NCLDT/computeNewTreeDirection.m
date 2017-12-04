@@ -13,7 +13,7 @@
 %wt: Initial direction the new tree should take
 
 
-function [] = computeNewTreeDirection(Tnc_mag, T_mag, q_root, q_n, q_ntc, q_end)
+function [wt] = computeNewTreeDirection(num_nctrees, num_trees, q_root, q_n, q_ntc, q_end)
 
 wt = 0;
 fp = 0;
@@ -26,7 +26,7 @@ if q_ntc == -1
     
 else
     %x accounts for chances of the new root growing to the goal
-    x = Tnc_mag/T_mag;
+    x = num_nctrees/num_trees;
     delta = 10^-9;
     g1 = x/(x + delta);
     
