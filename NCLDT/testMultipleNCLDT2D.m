@@ -34,7 +34,12 @@ load('obstacle_coords.mat');
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max
 global eta mu eta_size mu_size epsilon_decay
 global m q_root q_target q_pivot
-global tree_connected %Trees connected to end pt
+
+%Trees connected to q_end (Flag)
+global tree_connected_end
+%Trees connected to other trees (Flag)
+global tree_connected_tree
+%Trees decaying (Flag)
 global tree_decay
 
 %qtarget remains constant. qend will change if a tree is connected as the
@@ -58,11 +63,12 @@ num_trees = 5;
 num_nctrees = num_trees;
 
 %Initializing tree parameters as empty cells
-T={}; Tm={}; path={}; wt={}; ws={}; wt_current={}; rho_current={}; alpha={};
-epsilon_min={}; epsilon_max={};
-eta={}; mu={}; eta_size={}; mu_size={};  m={}; q_root={}; q_target ={}; q_pivot={}; epsilon_decay={};
-tree_connected={};
-tree_decay={};
+T = {}; Tm = {}; path = {}; wt = {}; ws = {}; wt_current = {}; rho_current = {}; alpha = {};
+epsilon_min = {}; epsilon_max = {};
+eta = {}; mu = {}; eta_size = {}; mu_size = {};  m = {}; q_root = {}; q_target = {}; q_pivot = {}; epsilon_decay = {};
+tree_connected_end = {};
+tree_connected_tree = {};
+tree_decay = {};
 
 %Selecting the start and end configurations
 fprintf('Click to select the start configuration.\n');
@@ -84,12 +90,12 @@ while ~done
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
     end
-
-        
-%     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
-
+    
+    
+    %     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+    
     for i=1:num_trees
-        if tree_connected{i} | tree_decay{i}
+        if tree_connected_end{i} | tree_decay{i}
             continue
         end
         
@@ -138,17 +144,20 @@ while ~done
                 plot(ax, [Tm{i}(j, 1), q_target{i}(1)], [Tm{i}(j, 2), q_target{i}(2)], 'k-');
                 path{i} = [path{i}; Tm{i}(j, :)];
                 path{i} = [path{i}; q_target{i}];
-                tree_connected{i} = true;
+                
                 
                 %Check if it connected to the q_end and change the number
                 %of connected trees
                 if q_target{i} == q_end
+                    %Connected to the end
+                    tree_connected_end{i} = true;
                     num_nctrees = num_nctrees - 1;
                 else
+                    %Connected to another tree
+                    tree_connected_tree{i} = true;
                     plot(ax, q_target{i}(1), q_target{i}(2), 'r.', 'MarkerSize', 10);
                 end
             end
-            
         end
     end
 end
