@@ -18,16 +18,15 @@ for i=1:length(obstacle_coords)
     
     coord = obstacle_coords{i};
     [in, on] = inpolygon(q(1), q(2), coord(:, 1), coord(:, 2));
-        
+    
     if in || on
         free = false;
     end
     
 end
-            
-            
-        
-        
-        
-        
-    
+
+
+
+
+
+

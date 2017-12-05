@@ -61,7 +61,8 @@ k2 = 10^-9;
 k3 = 5;
 
 %Specify number of initial trees
-num_trees = 36;
+num_trees = 49;
+counter = 0;
 
 %Number of total trees and non connected trees
 num_nctrees = num_trees;
@@ -118,7 +119,7 @@ while ~done
             tree_decay{i} = true;
             fprintf('Decay Tree:');
             fprintf("%d\n",i);
-            
+            counter = counter+1;
             %Once the tree has decayed, the algorithm moves on to the next
             %tree
             continue;
