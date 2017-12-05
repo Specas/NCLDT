@@ -31,7 +31,7 @@ while sample_num < m
         sample_num = sample_num + 1;
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
-        pause(0.1);
+        pause(0.001);
     else
         epsilon_min = epsilon_min * epsilon_decay;
         epsilon_max = epsilon_max * epsilon_decay;
