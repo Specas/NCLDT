@@ -9,6 +9,8 @@
 %epsilon_decay_init: Default initial epsilon_decay value for each tree
 %m_init: Default number of sampling points for each tree
 %rho_init: Default initial value of rho
+%tree_energy_init: Default initial value of tree energy for each tree
+%tree_energy_decay_init: Default initial value of tree decay for each tree
 %num_trees: Total number of trees
 %num_nctrees: Total number of non-connected trees
 %obstacle_coords: Structure containing the coordinates of the obstacles in
@@ -33,8 +35,7 @@ global tree_decay
 
 %Initializng paramters for each tree
 
-path{end+1} = [];
-
+path{end + 1} = [];
 mu{end + 1} = [];
 eta{end + 1} = [];
 eta_size{end + 1} = 0;
@@ -51,12 +52,9 @@ Tm{end+1} = q_root{end};
 
 %Computing the direction of the trees probabilistically
 
-% wt{end+1} = (q_end - q_root{end})/norm(q_end - q_root{end});
 [q_n, q_nnc] = findDecisionNodes(q_root{end});
 [wt{end + 1}, q_target{end + 1}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{end}, q_n, q_nnc, q_end);
 ws{end + 1} = -(q_start - q_root{end})/norm(q_start - q_root{end});
-
-% q_target{end + 1} = q_end;
 
 %Current direction of growth
 wt_current{end + 1} = wt{end};
@@ -73,7 +71,6 @@ epsilon_max{end + 1}= epsilon_max_init;
 epsilon_decay{end + 1}= epsilon_decay_init;
 tree_energy{end + 1} = tree_energy_init;
 tree_energy_decay{end + 1} = tree_energy_decay_init;
-
 m{end + 1} = m_init;
 
 end

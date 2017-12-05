@@ -61,7 +61,7 @@ k2 = 10^-9;
 k3 = 5;
 
 %Specify number of initial trees
-num_trees = 5;
+num_trees = 36;
 
 %Number of total trees and non connected trees
 num_nctrees = num_trees;
@@ -81,16 +81,19 @@ q_start = setConfiguration2D(fig, ax);
 fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
-for i=1:num_trees
-    createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
-end
+% for i=1:num_trees
+%     %We need to uniformly sample nodes (tree roots) at the start
+%     createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+% end
 
-done= false;
+createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+
+done = false;
 
 while ~done
     
     %     if num_trees<20
-    if true
+    if ~true
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
