@@ -111,7 +111,7 @@ while ~done
         end
         
         rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
-        [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt{i}, ws{i}, obstacle_coords);
+        [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt{i}, ws{i}, obstacle_coords, lim);
         
         %Non-decay condition
         if eta_size{i} == 0 & mu_size{i} == 0
@@ -153,7 +153,7 @@ while ~done
         epsilon_min{i} = rho_init;
         epsilon_max{i} = rho_current{i};
         
-        [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim);
+        [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
         
         %Plotting pivot node
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');

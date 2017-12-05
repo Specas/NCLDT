@@ -8,7 +8,7 @@
 
 %OUTPUTS:
 %ret: A boolean value that is true if qi lies in the set eta
-function ret = isInEta2D(qi, rho, wt, obstacle_coords)
+function ret = isInEta2D(qi, rho, wt, obstacle_coords, lim)
 
 ret = false;
 main_collision = false;
@@ -33,7 +33,7 @@ for i=1:length(obstacle_coords)
     end
 end
 
-free = isConfigInFree2D(qi_rho, obstacle_coords);
+free = isConfigInFree2D(qi_rho, obstacle_coords, lim);
 
 %Checking if the new point is in free configuration space
 if free & ~main_collision

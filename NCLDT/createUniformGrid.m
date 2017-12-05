@@ -16,7 +16,7 @@ pts = [];
 for i=1:size(X, 1)
     for j=1:size(X, 2)
         pts_tmp = [X(i, j), Y(i, j)];
-        if isConfigInFree2D(pts_tmp, obstacle_coords)
+        if isConfigInFree2D(pts_tmp, obstacle_coords, lim)
             pts = [pts; pts_tmp];
         end
     end

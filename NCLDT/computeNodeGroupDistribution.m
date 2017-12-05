@@ -18,7 +18,7 @@
 %mu: Mu set for Tm
 %size_eta: Number of elements in eta
 %size_mu: Number of elements in mu
-function [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho, wt, ws, obstacle_coords)
+function [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho, wt, ws, obstacle_coords, lim)
 
 eta = [];
 mu = [];
@@ -28,11 +28,11 @@ size_mu = 0;
 for i=1:size(Tm, 1)
     qi = Tm(i, :);
     
-    if isInEta2D(qi, rho, wt, obstacle_coords)
+    if isInEta2D(qi, rho, wt, obstacle_coords, lim)
         eta = [eta; qi];
     end
     
-    if isInMu2D(qi, rho, ws, obstacle_coords)
+    if isInMu2D(qi, rho, ws, obstacle_coords, lim)
         mu = [mu; qi];
     end
     
