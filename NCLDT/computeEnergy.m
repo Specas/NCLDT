@@ -8,5 +8,5 @@
 
 function [energy] = computeEnergy(energy_prev, energy_decay, spread)
 
-energy = energy_prev * energy_decay * spread;
+energy = energy_prev * energy_decay + spread;
 

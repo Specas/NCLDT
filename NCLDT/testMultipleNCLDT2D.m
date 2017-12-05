@@ -23,7 +23,8 @@ ndim = 2;
 %Creating Obstacle in space
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-load('obstacle_coords.mat');
+% save('obstacle_coords2.mat', 'obstacle_coords');
+load('obstacle_coords2.mat');
 
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -49,7 +50,7 @@ global tree_decay
 alpha_init = 45*pi/180;
 epsilon_max_init = 10;
 epsilon_min_init = 3;
-m_init = 5;
+m_init = 2;
 rho_init = 0.1;
 tree_energy_init = 100;
 tree_energy_decay_init = 0.9;
@@ -88,20 +89,21 @@ done= false;
 
 while ~done
     
-    if num_trees<20
+    %     if num_trees<20
+    if true
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
     end
     
-    fprintf('Total Energy: %.3f\n', total_tree_energy);
-    %fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+    %     fprintf('Total Energy: %.3f\n', total_tree_energy);
+    %     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
     
     %Resetting values
     total_tree_energy = 0;
     
     for i=1:num_trees
-        if tree_connected_end{i} | tree_decay{i}
+        if tree_connected_end{i} | tree_connected_tree{i} | tree_decay{i}
             continue
         end
         
@@ -127,7 +129,7 @@ while ~done
         %q_pivot and the new value. If it is less, it means that the tree
         %has not spread out much (Energy needs to be decreased).
         if eta_size{i} == 0
-            q_pivot_tmp = indNearestNode(mu{i}, q_root{i});
+            q_pivot_tmp = findNearestNode(mu{i}, q_root{i});
             spread{i} = norm(q_pivot_tmp - q_pivot{i});
             q_pivot{i} = q_pivot_tmp;
         else
