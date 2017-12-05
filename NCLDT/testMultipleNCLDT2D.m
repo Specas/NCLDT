@@ -23,8 +23,8 @@ ndim = 2;
 %Creating Obstacle in space
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-% save('obstacle_coords2.mat', 'obstacle_coords');
-load('obstacle_coords2.mat');
+% save('obstacle_coords3.mat', 'obstacle_coords');
+load('obstacle_coords3.mat');
 
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -61,7 +61,7 @@ k2 = 10^-9;
 k3 = 5;
 
 %Specify number of initial trees
-num_trees = 49;
+num_trees = 64;
 counter = 0;
 
 %Number of total trees and non connected trees
