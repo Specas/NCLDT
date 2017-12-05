@@ -1,8 +1,9 @@
 %Function that computes initial wt for a new tree
 
 %INPUTS
-%Tnc_mag: Number of trees that have not connected to the target
-%T_mag: Total number of trees
+%num_nctrees: Number of trees that have not connected to the target
+%num_trees: Total number of trees
+%wt_c: Current wt that might need to be conserved
 %q_root: New root node that is sampled
 %q_n: The nearest node to the sampled root node
 %q_ntc: The nearest node to the sampled root node that is a part of a
@@ -14,7 +15,7 @@
 %q_target: The target configuration depending on the probabilistic decision
 
 
-function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, q_root, q_n, q_nnc, q_end)
+function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, wt_c, q_root, q_n, q_nc, q_end)
 
 wt = 0;
 q_target = 0;
@@ -23,7 +24,7 @@ a = 20;
 
 %If no trees are connected, then the probability of the new node directing
 %to the target = 1
-if q_nnc == -1
+if q_nc == -1
     fp = 1;
     
 else
@@ -36,7 +37,7 @@ else
     %connected trees. Needs to override x if the sample configuration is
     %very close to a node in a connected tree
     
-    d = norm(q_n - q_nnc);
+    d = norm(q_n - q_nc);
     g2 = d/(a + d);
     
     fp = g1*g2;
@@ -49,11 +50,11 @@ end
 
 k = 1 + rand*99;
 if k <= fp*100
-    wt = (q_end - q_root)/norm(q_end - q_root);
+    wt = wt_c;
     q_target = q_end;
 else
-    wt = (q_nnc - q_root)/norm(q_nnc - q_root);
-    q_target = q_nnc;
+    wt = (q_nc - q_root)/norm(q_nc - q_root);
+    q_target = q_nc;
 end
 
 

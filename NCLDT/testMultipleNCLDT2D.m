@@ -24,7 +24,7 @@ ndim = 2;
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords3.mat', 'obstacle_coords');
-load('obstacle_coords3.mat');
+load('obstacle_coords2.mat');
 
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -53,16 +53,24 @@ epsilon_min_init = 3;
 m_init = 2;
 rho_init = 0.1;
 tree_energy_init = 100;
+tree_energy_threshold = 30;
 tree_energy_decay_init = 0.9;
-total_tree_energy = 0;
 epsilon_decay_init = 1.0;
 k1 = 10^9;
 k2 = 10^-9;
 k3 = 5;
 
+%Plotting parameters
+quiver_magn = 5;
+
 %Specify number of initial trees
-num_trees = 64;
-counter = 0;
+num_trees = 25;
+decay_counter = 0;
+
+%Initializing the energy cap (to decide on how many trees to add) and the
+%current total tree energy (for the initial batch of trees)
+trees_energy_cap = 3000;
+total_tree_energy = num_trees * tree_energy_init;
 
 %Number of total trees and non connected trees
 num_nctrees = num_trees;
@@ -94,13 +102,14 @@ done = false;
 while ~done
     
     %Add trees (preferably based on some decision)
-    if num_trees < 100
+%     if num_trees < 0
+    for i=1:round(trees_energy_cap/(total_tree_energy))
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
     end
     
-    %     fprintf('Total Energy: %.3f\n', total_tree_energy);
+        fprintf('Total Energy: %.3f\n', total_tree_energy);
     %     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
     
     %Resetting values
@@ -117,9 +126,8 @@ while ~done
         %Non-decay condition
         if eta_size{i} == 0 & mu_size{i} == 0
             tree_decay{i} = true;
-            counter = counter+1;
-            fprintf('Decay Tree:');
-            fprintf("%d, %d\n",i, counter);
+            decay_counter = decay_counter+1;
+            fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
             
             %Once the tree has decayed, the algorithm moves on to the next
             %tree
@@ -144,11 +152,19 @@ while ~done
         end
         
         %Updating energies
-        tree_energy{i} = computeEnergy(tree_energy{i}, tree_energy_decay{i}, spread{i});
+        tree_energy{i} = computeEnergy(tree_energy{i}, tree_energy_decay{i}, spread{i}, epsilon_min{i});
         total_tree_energy = total_tree_energy + tree_energy{i};
         
-        
+%         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
         path{i} = [path{i}; q_pivot{i}];
+        
+        if tree_energy{i} < tree_energy_threshold
+            tree_decay{i} = true;
+            decay_counter = decay_counter + 1;
+            fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
+            continue;
+        end
+
         
         
         %Setting epsilon_min and epsilon_max depending on rho
@@ -156,12 +172,14 @@ while ~done
         epsilon_max{i} = rho_current{i};
         
         [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
-        
+        [q_n, q_nc] = findDecisionNodes(q_root{i});
+        [wt_current{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, wt_current{i}, q_root{i}, q_n, q_nc, q_end);
+
         %Plotting pivot node
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');
         
         %Plotting direction
-        quiver(ax, q_pivot{i}(1), q_pivot{i}(2), 7*wt_current{i}(1), 7*wt_current{i}(2), 'g-');
+        quiver(ax, q_pivot{i}(1), q_pivot{i}(2), quiver_magn*wt_current{i}(1), quiver_magn*wt_current{i}(2), 'g-');
         
         for j=size(Tm{i}, 1)
             if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)

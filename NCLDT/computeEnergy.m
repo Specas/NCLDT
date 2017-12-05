@@ -6,7 +6,9 @@
 
 %OUTPUT
 
-function [energy] = computeEnergy(energy_prev, energy_decay, spread)
+function [energy] = computeEnergy(energy_prev, energy_decay, spread, avg_spread)
 
-energy = energy_prev * energy_decay + spread;
+k = 0.01;
+% energy = energy_prev * energy_decay + spread;
+energy = energy_prev * exp(-k*abs(spread - avg_spread));
 

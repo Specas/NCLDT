@@ -71,8 +71,9 @@ for i=1:size(q_pts, 1)
 
     %Computing the direction of the trees probabilistically
 
-    [q_n, q_nnc] = findDecisionNodes(q_root{i});
-    [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{i}, q_n, q_nnc, q_end);
+    [q_n, q_nc] = findDecisionNodes(q_root{i});
+    wt_c = (q_end - q_root{i})/norm(q_end - q_root{i});
+    [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, wt_c, q_root{i}, q_n, q_nc, q_end);
     ws{i} = -(q_start - q_root{i})/norm(q_start - q_root{i});
 
     %Current direction of growth

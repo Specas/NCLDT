@@ -6,11 +6,11 @@
 
 %OUTPUT:
 %q_n: The closest node among all the path nodes of all the trees
-%q_nn: The closes node among all the path nodes of all the connected trees
+%q_nc: The closes node among all the path nodes of all the connected trees
 
 %OUTPUT
 
-function [q_n, q_nnc] = findDecisionNodes(q_root)
+function [q_n, q_nc] = findDecisionNodes(q_root)
 
 %Setting up global variables that need to be used
 %Only the nodes in the path for each tree need to be considered. (Dont have
@@ -28,7 +28,7 @@ all_nodes = [];
 connected_nodes = [];
 
 q_n = 0;
-q_nnc = 0;
+q_nc = 0;
 
 for i=1:num_trees
     
@@ -51,9 +51,9 @@ else
 end
 
 if isempty(connected_nodes)
-    q_nnc = -1;
+    q_nc = -1;
 else
-    q_nnc = findNearestNode(connected_nodes, q_root);
+    q_nc = findNearestNode(connected_nodes, q_root);
 end
 
 
