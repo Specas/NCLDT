@@ -52,7 +52,6 @@ if k <= fp*100
     wt = (q_end - q_root)/norm(q_end - q_root);
     q_target = q_end;
 else
-    disp('New Direction');
     wt = (q_nnc - q_root)/norm(q_nnc - q_root);
     q_target = q_nnc;
 end

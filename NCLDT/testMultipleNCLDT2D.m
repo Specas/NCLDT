@@ -34,7 +34,7 @@ load('obstacle_coords.mat');
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max
 global eta mu eta_size mu_size epsilon_decay
 global m q_root q_target q_pivot
-
+global tree_energy tree_energy_decay spread
 %Trees connected to q_end (Flag)
 global tree_connected_end
 %Trees connected to other trees (Flag)
@@ -51,6 +51,9 @@ epsilon_max_init = 10;
 epsilon_min_init = 3;
 m_init = 5;
 rho_init = 0.1;
+tree_energy_init = 100;
+tree_energy_decay_init = 0.9;
+total_tree_energy = 0;
 epsilon_decay_init = 1.0;
 k1 = 10^9;
 k2 = 10^-9;
@@ -66,9 +69,9 @@ num_nctrees = num_trees;
 T = {}; Tm = {}; path = {}; wt = {}; ws = {}; wt_current = {}; rho_current = {}; alpha = {};
 epsilon_min = {}; epsilon_max = {};
 eta = {}; mu = {}; eta_size = {}; mu_size = {};  m = {}; q_root = {}; q_target = {}; q_pivot = {}; epsilon_decay = {};
-tree_connected_end = {};
-tree_connected_tree = {};
-tree_decay = {};
+tree_connected_end = {}; tree_connected_tree = {}; tree_decay = {};
+tree_energy = {}; tree_energy_decay = {}; spread = {};
+
 
 %Selecting the start and end configurations
 fprintf('Click to select the start configuration.\n');
@@ -78,7 +81,7 @@ fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
 for i=1:num_trees
-    createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+    createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
 end
 
 done= false;
@@ -86,13 +89,16 @@ done= false;
 while ~done
     
     if num_trees<20
-        createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+        createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
     end
     
+    fprintf('Total Energy: %.3f\n', total_tree_energy);
+    %fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
     
-    %     fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+    %Resetting values
+    total_tree_energy = 0;
     
     for i=1:num_trees
         if tree_connected_end{i} | tree_decay{i}
@@ -116,11 +122,24 @@ while ~done
         end
         
         %Finding the nearest node from eta or mu (depending on their values)
+        
+        %The spread is computed as the norm between the previous value of
+        %q_pivot and the new value. If it is less, it means that the tree
+        %has not spread out much (Energy needs to be decreased).
         if eta_size{i} == 0
-            q_pivot{i} = findNearestNode(mu{i}, q_root{i});
+            q_pivot_tmp = indNearestNode(mu{i}, q_root{i});
+            spread{i} = norm(q_pivot_tmp - q_pivot{i});
+            q_pivot{i} = q_pivot_tmp;
         else
-            q_pivot{i} = findNearestNode(eta{i}, q_root{i});
+            q_pivot_tmp = findNearestNode(eta{i}, q_root{i});
+            spread{i} = norm(q_pivot_tmp - q_pivot{i});
+            q_pivot{i} = q_pivot_tmp;
         end
+        
+        %Updating energies
+        tree_energy{i} = computeEnergy(tree_energy{i}, tree_energy_decay{i}, spread{i});
+        total_tree_energy = total_tree_energy + tree_energy{i};
+        
         
         path{i} = [path{i}; q_pivot{i}];
         
@@ -164,7 +183,7 @@ while ~done
         %connected (end or tree) trees roots
         if isCollisionFreePath2D(q_start, q_root{i}, obstacle_coords) & (tree_connected_end{i} | tree_connected_tree{i})
             %Found a path from the start to one of the connected trees
-            fprintf('Path Found\n');
+            fprintf('Path Found!\n');
             plot(ax, [q_start(1), q_root{i}(1)], [q_start(2), q_root{i}(2)], 'k-');
             done = true;
             break;
