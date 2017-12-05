@@ -93,8 +93,8 @@ done = false;
 
 while ~done
     
-    %     if num_trees<20
-    if ~true
+    %Add trees (preferably based on some decision)
+    if num_trees < 100
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
@@ -117,9 +117,10 @@ while ~done
         %Non-decay condition
         if eta_size{i} == 0 & mu_size{i} == 0
             tree_decay{i} = true;
-            fprintf('Decay Tree:');
-            fprintf("%d\n",i);
             counter = counter+1;
+            fprintf('Decay Tree:');
+            fprintf("%d, %d\n",i, counter);
+            
             %Once the tree has decayed, the algorithm moves on to the next
             %tree
             continue;

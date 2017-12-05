@@ -17,7 +17,7 @@ function [q_sample] = sampleConfigurationFree(obstacle_coords, ndim, lim)
 q_sample = sampleConfiguration(ndim, lim);
 
 %If the sample is not in free space, keep sampling
-while ~isConfigInFree2D(q_sample, obstacle_coords)
+while ~isConfigInFree2D(q_sample, obstacle_coords, lim)
     q_sample = sampleConfiguration(ndim, lim);
 end
 
