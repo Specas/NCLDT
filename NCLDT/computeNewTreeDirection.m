@@ -6,7 +6,6 @@
 %INPUTS
 %num_nctrees: Number of trees that have not connected to the target.
 %num_trees: Total number of trees.
-%wt_c: Current wt that might need to be conserved. It is equal to the
 %direction to q_end for newly created nodes.
 %q_root: New root node that is sampled.
 %q_n: The nearest node to the sampled root node.
@@ -17,15 +16,18 @@
 %OUTPUT
 %wt: Initial direction the new tree should take.
 %q_target: The target configuration depending on the probabilistic
+%changed: Boolean variable that is true when the direction has changed to a
+%connected tree node.
 %decision.
 
 
-function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, wt_c, q_root, q_n, q_nc, q_end)
+function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, q_root, q_n, q_nc, q_end)
 
 wt = 0;
 q_target = 0;
 fp = 0;
 a = 20;
+changed = false;
 
 %If no trees are connected, then the probability of the new node directing
 %to the target = 1.
@@ -55,11 +57,13 @@ end
 
 k = 1 + rand*99;
 if k <= fp*100
-    wt = wt_c;
+    wt = (q_end - q_root)/norm(q_end - q_root);
     q_target = q_end;
 else
     wt = (q_nc - q_root)/norm(q_nc - q_root);
     q_target = q_nc;
+    %Direction has changed
+    changed = true;
 end
 
 

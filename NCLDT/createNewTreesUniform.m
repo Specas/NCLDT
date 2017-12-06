@@ -71,8 +71,7 @@ for i=1:size(q_pts, 1)
     %First the nearest node and the nearest node in a connected tree are
     %computed. These are then used to compute the growth direction.
     [q_n, q_nc] = findDecisionNodes(q_root{i});
-    wt_c = (q_end - q_root{i})/norm(q_end - q_root{i});
-    [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, wt_c, q_root{i}, q_n, q_nc, q_end);
+    [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{i}, q_n, q_nc, q_end);
     ws{i} = -(q_start - q_root{i})/norm(q_start - q_root{i});
     
     %Current direction of growth.

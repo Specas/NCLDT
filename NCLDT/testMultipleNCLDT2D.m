@@ -55,14 +55,14 @@ alpha_init = 45*pi/180;
 epsilon_max_init = 10;
 epsilon_min_init = 3;
 m_init = 2;
-rho_init = 0.1;
+rho_init = 1;
 tree_energy_init = 100;
 tree_energy_threshold = 30;
 tree_energy_decay_init = 0.9;
 epsilon_decay_init = 1.0;
 k1 = 10^9;
 k2 = 10^-9;
-k3 = 5;
+k3 = 10;
 
 %Plotting parameters.
 quiver_magn = 5;
@@ -162,8 +162,6 @@ while ~done
             fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
             continue;
         end
-
-        
         
         %Setting epsilon_min and epsilon_max depending on rho.
         epsilon_min{i} = rho_init;
@@ -171,12 +169,12 @@ while ~done
         
         [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
         
-        %wt_current is updated (Direction can be changed to connect to a
+        %wt and q_target is updated (Direction can be changed to connect to a
         %connected tree instead of the target). This is done using the
         %probabilistic method defined in the function
         %computeNewTreeDirection.
         [q_n, q_nc] = findDecisionNodes(q_root{i});
-        [wt_current{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, wt_current{i}, q_root{i}, q_n, q_nc, q_end);
+        [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{i}, q_n, q_nc, q_end);
 
         %Plotting pivot node.
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');
