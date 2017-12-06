@@ -62,7 +62,7 @@ tree_energy_decay_init = 0.9;
 epsilon_decay_init = 1.0;
 k1 = 10^9;
 k2 = 10^-9;
-k3 = 10;
+k3 = 5;
 
 %Plotting parameters.
 quiver_magn = 5;
