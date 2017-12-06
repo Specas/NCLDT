@@ -102,7 +102,7 @@ done = false;
 while ~done
     
     %Adding trees based on the current energy levels of the system.
-    for i=1:round(trees_energy_cap/(total_tree_energy))
+    for i=1:round((trees_energy_cap - total_tree_energy)/tree_energy_init)
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
@@ -150,10 +150,10 @@ while ~done
         end
         
         %Updating energies.
-        tree_energy{i} = computeEnergy(tree_energy{i}, tree_energy_decay{i}, spread{i}, epsilon_min{i});
+        tree_energy{i} = computeEnergy(tree_energy_init, tree_energy{i}, epsilon_max{i}, spread{i});
         total_tree_energy = total_tree_energy + tree_energy{i};
         
-%         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
+        fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
         path{i} = [path{i}; q_pivot{i}];
         
         if tree_energy{i} < tree_energy_threshold

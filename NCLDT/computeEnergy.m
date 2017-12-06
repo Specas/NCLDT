@@ -6,9 +6,13 @@
 
 %OUTPUT
 
-function [energy] = computeEnergy(energy_prev, energy_decay, spread, avg_spread)
+function [energy] = computeEnergy(energy_max, energy_prev, epsilon_max, spread)
 
-k = 0.01;
-% energy = energy_prev * energy_decay + spread;
-energy = energy_prev * exp(-k*abs(spread - avg_spread));
+weight_energy = 0.005;
+weight_spread = 0.005;
+
+beta = weight_energy * (energy_max - energy_prev) + weight_spread * (epsilon_max - spread);
+disp(beta);
+energy = energy_prev * exp(-beta);
+
 
