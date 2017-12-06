@@ -1,25 +1,29 @@
 %Function to grow a single NCLDT tree from its root
 
 %INPUTS:
-%fig: Figure
-%ax: Axes of fig
-%q_far: Farthest node in the tree to sample from
-%wt_current: Current direction of growth
-%alpha: Sampling spread angle (NCLDT parameter)
-%epsilon_min: Minimum sampling radius (NCLDT parameter)
-%epsilon_max: Maximum sampling radius (NCLDT parameter)
-%m: Number of nodes to add to the tree in each iteration (NCLDT parameter)
-%obstacle_coords: Coordinates of vertices of obstacles
-%ndim: Number of dimensions
+%fig: Input figure.
+%ax: Axes of fig.
+%q_pivot: Pivot node in the tree to sample from.
+%T: T matrix containing all the sample points for the particular tree.
+%wt_current: Current direction of growth.
+%alpha: Sampling spread angle.
+%epsilon_min: Minimum sampling radius.
+%epsilon_max: Maximum sampling radius.
+%epsilon_decay: Decay rate of the sampling radius.
+%m: Number of nodes to add to the tree in each iteration.
+%obstacle_coords: Coordinates of vertices of obstacles.
+%ndim: Number of dimensions.
+%lim: Limits of each dimension of the configuration space. It is an ndim*2
+%array where each row contains the min and max limits for a dimension.
 
 %OUTPUS:
-%T: New Tree node matrix
-%qm: Matrix of m nodes added in this iteration
+%T: New Tree node matrix.
+%qm: Matrix of m nodes added in this iteration.
 
 function [T, q_m] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, epsilon_decay, m, obstacle_coords, ndim, lim)
 
-%Sampling in the biased space (epsilon ball with alpha constraint)
-%Sampling m points around an epsilon ball about the farthest point
+%Sampling in the biased space (epsilon ball with alpha constraint).
+%Sampling m points around an epsilon ball about the pivot point.
 
 q_m = [];
 sample_num = 0;
@@ -31,15 +35,15 @@ while sample_num < m
         sample_num = sample_num + 1;
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
-        pause(0.001);
+        %Pause to animate the search.
+        pause(0.0001);
     else
         epsilon_min = epsilon_min * epsilon_decay;
         epsilon_max = epsilon_max * epsilon_decay;
     end
-    
 end
 
-%Connecting edges
+%Appending sampled nodes to T.
 T = [T; q_m];
 
 

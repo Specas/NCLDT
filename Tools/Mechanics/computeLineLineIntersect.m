@@ -2,7 +2,28 @@
 %distance between them and returns it. Also returns the point of
 %intersection.
 %If they intersect, it also returns a flag that represents if the
-%intersection point lies within both the vector lines
+%intersection point lies within both the vector lines.
+
+%INPUT:
+%p1: One end point of the first line.
+%p2: The other end point of the first line.
+%q1: One end point of the second line.
+%q2: The other end point of the second line.
+
+%OUTPUT:
+%pi, qi: Points on the first and second line respectively that defines the
+%end points of line (of shortest distance) between the first and second
+%lines. By the definition of shortest distance, this line joining pi and qi
+%is perpendicular to both the first and second lines. If the lines
+%intersect, pi and qi are equal to the point of intersection.
+%d: The magnitude of the shortest distance between the lines. d=0 if the
+%lines intersect.
+%valid_intersection: 1 if the lines intersect and the point of intersection
+%lies in between the end points p1, p2 and q1, q2. This is required as the
+%computation computes intersections when the lines are extended beyond
+%their end points. 0 if the lines do not intersect or the point of
+%intersection lies outside the end points p1, p2 or q1, q2.
+
 function [pi, qi, d, valid_intersection] = computeLineLineIntersect(p1, p2, q1, q2)
 
 A = dot(q1 - p1, p2 - p1);
@@ -14,6 +35,7 @@ F = dot(p2 - p1, q2 - q1);
 
 a = [B, -C; E -F];
 b = [-A; -D];
+
 %If the lines are parallel, the determinant becomes zero
 
 x = pinv(a)*b;
@@ -39,6 +61,6 @@ if d == 0
     end
 end
 
-    
+
 
 

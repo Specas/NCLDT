@@ -5,14 +5,12 @@
 %ax: Axes of the figure to plot on
 %path: Matrix where each row is a configuration of the path from start to
 %end. The first node is q_start and the last node is q_end
-%varargin: Optional color parameter to draw the path in a specific color
+%Function also has optional color parameter to draw the path in a specific color
 
 %OUTPUT:
-%Only draws on ax
+%The function only draws on ax
 
 function [] = drawPath(fig, ax, path, varargin)
-
-disp(nargin);
 
 for i=1:size(path, 1)-1
     q1 = path(i, :);

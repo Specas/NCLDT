@@ -6,18 +6,18 @@
 
 %INPUTS:
 %Tm: mXn matrix containing the m n-dimensional nodes added in the current
-%iteration
-%rho: Radius of obstacle search for the current iteration
-%wt: wt unit vector
-%ws: ws unit vector
+%iteration.
+%rho: Radius of obstacle search for the current iteration.
+%wt: wt unit vector.
+%ws: ws unit vector.
 %obstacle_coords: Structure containing coordinates for vertices of the
-%obstacles
+%obstacles.
 
 %OUTPUTS:
-%eta: Eta set for Tm
-%mu: Mu set for Tm
-%size_eta: Number of elements in eta
-%size_mu: Number of elements in mu
+%eta: Eta set for Tm.
+%mu: Mu set for Tm.
+%size_eta: Number of elements in eta.
+%size_mu: Number of elements in mu.
 function [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho, wt, ws, obstacle_coords, lim)
 
 eta = [];

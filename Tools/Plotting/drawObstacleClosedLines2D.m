@@ -1,10 +1,18 @@
+%Function to join all the coordinates in coord. Each row of coord contains
+%an x and y coordinate. Lines are drawn between consecutive lines.
+%The first and last points are joined. Hence a closed figure is formed.
+
+%INPUT
+%ax: Axes corresponding to the figure
+%coord: A matrix containing the x and y coordinates of an obstacle in its
+%columns.
+
+%OUTPUT
+%The function only draws the obstacle on ax.
+
 function [] = drawObstacleClosedLines2D(ax, coord)
 
 hold on;
-
-%Function to join all the coordinates in coord. Each row of coord contains
-%an x and y coordinate. Lines are drawn between consecutive lines.
-%The first and last points arejoined. Hence a closed figure is formed.
 
 %x and y coordinate
 x = coord(:, 1);

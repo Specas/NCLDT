@@ -1,25 +1,25 @@
-%Function to create a uniform sampling of trees for the initial batch
+%Function to create a uniform sampling of trees for the initial batch.
 
 %INPUT
-%q_start: The start configuration
-%q_end: The end or goal configuration
-%alpha_init: Default initial value of alpha for each tree
-%epsilon_max_init: Default initial epsilon_max value for each tree
-%epsilon_min_init: Default initial epsilon_min value for each tree
-%epsilon_decay_init: Default initial epsilon_decay value for each tree
-%m_init: Default number of sampling points for each tree
-%rho_init: Default initial value of rho
-%tree_energy_init: Default initial value of tree energy for each tree
-%tree_energy_decay_init: Default initial value of tree decay for each tree
-%num_trees: Total number of trees
-%num_nctrees: Total number of non-connected trees
+%q_start: The start configuration.
+%q_end: The end or goal configuration.
+%alpha_init: Default initial value of alpha for each tree.
+%epsilon_max_init: Default initial epsilon_max value for each tree.
+%epsilon_min_init: Default initial epsilon_min value for each tree.
+%epsilon_decay_init: Default initial epsilon_decay value for each tree.
+%m_init: Default number of sampling points for each tree.
+%rho_init: Default initial value of rho.
+%tree_energy_init: Default initial value of tree energy for each tree.
+%tree_energy_decay_init: Default initial value of tree decay for each tree.
+%num_trees: Total number of trees.
+%num_nctrees: Total number of non-connected trees.
 %obstacle_coords: Structure containing the coordinates of the obstacles in
-%the workspace
-%ndim: Number of dimensions
-%lim: Limits of the configuration space
+%the workspace.
+%ndim: Number of dimensions.
+%lim: Limits of the configuration space.
 
 %OUTPUT
-%The function only changes global NCLDT values
+%The function only changes global NCLDT values.
 
 function [] = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim)
 
@@ -47,14 +47,12 @@ for i=1:ndim
     pts_dist_tmp = (lim(i, 2) - lim(i, 1))/num_trees_single_dimension;
     pts_dist = [pts_dist; pts_dist_tmp];
 end
-q_pts = createUniformGrid(pts_dist, obstacle_coords, ndim, lim);
+q_pts = createUniformGrid2D(pts_dist, obstacle_coords, lim);
 
 for i=1:size(q_pts, 1)
-
-    %Initializng paramters for each tree
-
+    
+    %Initializng paramters for each tree.
     path{i} = [];
-
     mu{i} = [];
     eta{i} = [];
     eta_size{i} = 0;
@@ -63,28 +61,29 @@ for i=1:size(q_pts, 1)
     tree_connected_end{i} = false;
     tree_connected_tree{i} = false;
     tree_decay{i} = false;
-
-    %Sampling new root node for the tree
+    
+    %Sampling new root node for the tree.
     q_root{i} = q_pts(i, :);
     T{i} = q_root{i};
     Tm{i} = q_root{i};
-
-    %Computing the direction of the trees probabilistically
-
+    
+    %Computing the direction of the trees probabilistically.
+    %First the nearest node and the nearest node in a connected tree are
+    %computed. These are then used to compute the growth direction.
     [q_n, q_nc] = findDecisionNodes(q_root{i});
     wt_c = (q_end - q_root{i})/norm(q_end - q_root{i});
     [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, wt_c, q_root{i}, q_n, q_nc, q_end);
     ws{i} = -(q_start - q_root{i})/norm(q_start - q_root{i});
-
-    %Current direction of growth
+    
+    %Current direction of growth.
     wt_current{i} = wt{i};
-
-    %Variable along which you sample
+    
+    %Variable along which you sample.
     q_pivot{i} = q_root{i};
-
-    %Current obstacle search radius=
+    
+    %Setting up parameters with default initial values.
     rho_current{i} = rho_init;
-
+    
     alpha{i} = alpha_init;
     epsilon_min{i}= epsilon_min_init;
     epsilon_max{i}= epsilon_max_init;
@@ -92,7 +91,7 @@ for i=1:size(q_pts, 1)
     tree_energy{i} = tree_energy_init;
     tree_energy_decay{i} = tree_energy_decay_init;
     m{i} = m_init;
-
+    
 end
 
 

@@ -1,16 +1,19 @@
 %Function to create a uniform grid, given the distance between points and space
-%limits for a general n-dimensional space
+%limits.
 
 %INPUT
-%pts_dist: Required distance between points
-%ndim: Number of dimensions
-%lim: Limits in all dimensions
+%pts_dist: Required distance between points.
+%lim: Limits in all dimensions.
 
-function [pts] = createUniformGrid(pts_dist, obstacle_coords, ndim, lim)
+%OUTPUT:
+%pts: All the uniformly sampled configurations stacked in a matrix. Each
+%row contains one sampled point.
+
+function [pts] = createUniformGrid2D(pts_dist, obstacle_coords, lim)
 
 pts = [];
 
-%Currently computing specifically for a 2D case
+%Currently computing specifically for a 2D case.
 [X, Y] = ndgrid(lim(1, 1):pts_dist(1):lim(1, 2), lim(2, 1):pts_dist(2):lim(2, 2));
 
 for i=1:size(X, 1)

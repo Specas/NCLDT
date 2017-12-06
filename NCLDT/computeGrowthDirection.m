@@ -2,15 +2,15 @@
 %and mu
 
 %INPUTS:
-%size_eta: size of the set eta
-%size_mu: size of the set mu
-%wt: wt unit vector
-%ws: ws unit vector
-%k1: Very large positive number (NCLDT parameter)
-%k2: Very small positive number (NCLDT parameter)
+%size_eta: size of the set eta.
+%size_mu: size of the set mu.
+%wt: wt unit vector.
+%ws: ws unit vector.
+%k1: Very large positive number (NCLDT parameter).
+%k2: Very small positive number (NCLDT parameter).
 
 %OUTPUTS:
-%wtc: Current direction of growth
+%wt_current: Current direction of growth.
 
 function wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2)
 

@@ -1,13 +1,15 @@
 %Checks if there exists a collision free path between two configurations in
-%2D. Done using line equations
+%2D. Done using line equations.
 
 %INPUT:
-%q1: Start configuration
-%q2: End configuration
-%obstacle_coords: Structure containing coordinates of vertices of obstacles
+%q1: Start configuration.
+%q2: End configuration.
+%obstacle_coords: Structure containing coordinates of vertices of
+%obstacles.
 
 %OUTPUT:
-%ret: Returns true if a non collision path exists
+%ret: Returns true if a non collision path exists.
+
 function [ret] = isCollisionFreePath2D(q1, q2, obstacle_coords)
 
 ret = true;

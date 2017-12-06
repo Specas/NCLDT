@@ -2,13 +2,11 @@
 %closes node in a connected tree
 
 %INPUT
-%q_root: The newly sampled root node
+%q_root: The newly sampled root node.
 
 %OUTPUT:
-%q_n: The closest node among all the path nodes of all the trees
-%q_nc: The closes node among all the path nodes of all the connected trees
-
-%OUTPUT
+%q_n: The closest node among all the path nodes of all the trees.
+%q_nc: The closes node among all the path nodes of all the connected trees.
 
 function [q_n, q_nc] = findDecisionNodes(q_root)
 
@@ -18,7 +16,7 @@ function [q_n, q_nc] = findDecisionNodes(q_root)
 %To compute the closest node, we append all the paths and use the augmented
 %array in a call to findNearestNode.
 %To compute the closest node in a connected tree, we form the augmented
-%matrix using tree_connected to find the trees that have connected
+%matrix using tree_connected to find the trees that have connected.
 
 global tree_connected_end tree_connected_tree path
 
@@ -32,7 +30,7 @@ q_nc = 0;
 
 for i=1:num_trees
     
-    %Computed all_nodes and connected_nodes
+    %Computed all_nodes and connected_nodes.
     all_nodes = [all_nodes; path{i}];
     
     if tree_connected_end{i} | tree_connected_tree{i}
@@ -42,7 +40,7 @@ end
 
 %If any of the arrays are empty, we set the nearest node value to -1 as the
 %condition in computeNewTreeDirection takes care of this and sets the
-%wt direction to q_end
+%wt direction to q_end.
 
 if isempty(all_nodes)
     q_n = -1;
@@ -55,12 +53,5 @@ if isempty(connected_nodes)
 else
     q_nc = findNearestNode(connected_nodes, q_root);
 end
-
-
-    
-
-
-    
-
 
 
