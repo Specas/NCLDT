@@ -28,7 +28,7 @@ ndim = 2;
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords4.mat', 'obstacle_coords');
-load('obstacle_coords2.mat');
+load('obstacle_coords4.mat');
 
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -120,7 +120,7 @@ while ~done
         end
         
         rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
-        [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt{i}, ws{i}, obstacle_coords, lim);
+        [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt_current{i}, ws{i}, obstacle_coords, lim);
         
         %Non-decay condition.
         if eta_size{i} == 0 & mu_size{i} == 0
