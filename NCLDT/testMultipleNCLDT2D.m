@@ -116,6 +116,7 @@ while ~done
     
     for i=1:num_trees
         if tree_connected_end{i} | tree_connected_tree{i} | tree_decay{i}
+            fprintf('dhjfhdjfjdf\n');
             continue
         end
         
@@ -180,7 +181,7 @@ while ~done
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');
         
         %Plotting direction.
-        quiver(ax, q_pivot{i}(1), q_pivot{i}(2), quiver_magn*wt_current{i}(1), quiver_magn*wt_current{i}(2), 'g-');
+        quiver(ax, q_pivot{i}(1), q_pivot{i}(2), quiver_magn * wt_current{i}(1), quiver_magn * wt_current{i}(2), 'g-');
         
         for j=size(Tm{i}, 1)
             if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)
