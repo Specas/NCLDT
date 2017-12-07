@@ -57,7 +57,7 @@ m = 5;
 rho_init = 0.1;
 k1 = 10^5;
 k2 = 10^-5;
-k3 = 5;
+k3 = 1;
 
 %Current direction of growth.
 wt_current = wt;

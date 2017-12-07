@@ -54,8 +54,8 @@ global tree_decay
 alpha_init = 45*pi/180;
 epsilon_max_init = 0;
 epsilon_min_init = 0;
-m_init = 2;
-rho_init = 0.01;
+m_init = 3;
+rho_init = 0.1;
 tree_energy_init = 100;
 tree_energy_threshold = 70;
 tree_energy_decay_init = 0.9;
@@ -71,12 +71,12 @@ tree_connectivity = [];
 quiver_magn = 5;
 
 %Specify number of initial trees.
-num_trees = 64;
+num_trees = 16;
 decay_counter = 0;
 
 %Initializing the energy cap (to decide on how many trees to add) and the
 %current total tree energy (for the initial batch of trees).
-trees_energy_cap = 5000;
+trees_energy_cap = 2000;
 total_tree_energy = num_trees * tree_energy_init;
 
 %Number of total trees and non connected trees.
@@ -192,13 +192,12 @@ while ~done
         quiver(ax, q_pivot{i}(1), q_pivot{i}(2), quiver_magn * wt_current{i}(1), quiver_magn * wt_current{i}(2), 'g-');
         
         for j=size(Tm{i}, 1)
-            if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)
+            q_tmp = Tm{i}(j, :);
+            if isCollisionFreePath2D(q_tmp, q_target{i}, obstacle_coords)
                 
                 %Finding the tree that connected.
                 connected_tree_index = findTreeContainingNode(q_target{i}, q_end);
-                tree_connectivity = [tree_connectivity, zeros(size(tree_connectivity, 1), 1)];
-                tree_connectivity = [tree_connectivity; zeros(1, size(tree_connectivity, 2))];
-                %Checking if it connected to q_end
+                %Checking if it connected to q_end.
                 if connected_tree_index == -1
                     
                 else
@@ -206,12 +205,12 @@ while ~done
                     tree_connectivity(connected_tree_index, i) = 1;
                 end
                 
-                %Plotting and appending to path
-                plot(ax, [Tm{i}(j, 1), q_target{i}(1)], [Tm{i}(j, 2), q_target{i}(2)], 'k-');
+                %Plotting and appending to path.
+                plot(ax, [q_tmp(1), q_target{i}(1)], [q_tmp(2), q_target{i}(2)], 'k-');
                 path{i} = [path{i}; Tm{i}(j, :)];
                 path{i} = [path{i}; q_target{i}];
                       
-                %Check if it connected to the q_end and change the number
+                %Check if it connected to the q_end and change the number.
                 %of connected trees.
                 if q_target{i} == q_end
                     %Connected to the end.
@@ -223,19 +222,19 @@ while ~done
                     plot(ax, q_target{i}(1), q_target{i}(2), 'r.', 'MarkerSize', 10);
                 end
             end
-        end
-        
+            
         %Check if there is a connection between q_start and any of the
         %connected (end or tree) trees roots.
-        if isCollisionFreePath2D(q_start, q_root{i}, obstacle_coords) & (tree_connected_end{i} | tree_connected_tree{i})
+        if isCollisionFreePath2D(q_start, Tm{i}(j, :), obstacle_coords) & (tree_connected_end{i} | tree_connected_tree{i})
             %Found a path from the start to one of the connected trees. As
             %connected trees are all connected to q_end, it means that a
             %path from start to end has been found and the problem has been
             %solved.
             fprintf('Path Found!\n');
-            plot(ax, [q_start(1), q_root{i}(1)], [q_start(2), q_root{i}(2)], 'k-');
+            plot(ax, [q_start(1), q_tmp(1)], [q_start(2), q_tmp(2)], 'k-');
             done = true;
             break;
+        end
         end
     end
 end

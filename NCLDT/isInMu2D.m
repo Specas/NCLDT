@@ -17,7 +17,7 @@ function ret = isInMu2D(qi, rho, ws, obstacle_coords, lim)
 ret = false;
 main_collision = false;
 
-%Computing the new point at a distance rho from qi in the direction of wt.
+%Computing the new point at a distance rho from qi in the direction of ws.
 qi_rho = qi + rho*ws;
 
 for i=1:length(obstacle_coords)
