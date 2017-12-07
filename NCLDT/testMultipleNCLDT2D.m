@@ -27,7 +27,7 @@ ndim = 2;
 %Create new obstacles and save them or load an existing obstacle
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-% save('obstacle_coords4.mat', 'obstacle_coords');
+% save('obstacle_coords3.mat', 'obstacle_coords');
 load('obstacle_coords4.mat');
 
 %Draw filled obstacles.
@@ -57,23 +57,26 @@ epsilon_min_init = 3;
 m_init = 2;
 rho_init = 1;
 tree_energy_init = 100;
-tree_energy_threshold = 30;
+tree_energy_threshold = 70;
 tree_energy_decay_init = 0.9;
-epsilon_decay_init = 1.0;
+epsilon_decay_init = 0.99;
 k1 = 10^9;
 k2 = 10^-9;
-k3 = 5;
+k3 = 7;
+
+%Matrix to keep track of connectivity between trees
+tree_connectivity = [];
 
 %Plotting parameters.
 quiver_magn = 5;
 
 %Specify number of initial trees.
-num_trees = 25;
+num_trees = 64;
 decay_counter = 0;
 
 %Initializing the energy cap (to decide on how many trees to add) and the
 %current total tree energy (for the initial batch of trees).
-trees_energy_cap = 3000;
+trees_energy_cap = 5000;
 total_tree_energy = num_trees * tree_energy_init;
 
 %Number of total trees and non connected trees.
@@ -95,7 +98,7 @@ fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
 %Creating the initial batch of uniformly sampled trees.
-createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+num_trees = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
 
 done = false;
 
@@ -106,6 +109,10 @@ while ~done
         createNewTree(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
         num_trees = num_trees + 1;
         num_nctrees = num_nctrees + 1;
+        
+        %Adding to the connectivity matrix
+        tree_connectivity = [tree_connectivity, zeros(size(tree_connectivity, 1), 1)];
+        tree_connectivity = [tree_connectivity; zeros(1, size(tree_connectivity, 2))];
     end
     
         fprintf('Total Energy: %.3f\n', total_tree_energy);
@@ -116,7 +123,6 @@ while ~done
     
     for i=1:num_trees
         if tree_connected_end{i} | tree_connected_tree{i} | tree_decay{i}
-            fprintf('dhjfhdjfjdf\n');
             continue
         end
         
@@ -161,6 +167,8 @@ while ~done
             tree_decay{i} = true;
             decay_counter = decay_counter + 1;
             fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
+            %Dont need to grow the tree if the decay condition is met. The
+            %program moves on to the next tree.
             continue;
         end
         

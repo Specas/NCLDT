@@ -19,9 +19,13 @@
 %lim: Limits of the configuration space.
 
 %OUTPUT
+%num_trees_initial_batch: Actual number of trees that are grown in the
+%initial batch (Due to obstacles, this number may be lesser than the
+%required value)
+
 %The function only changes global NCLDT values.
 
-function [] = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim)
+function [num_trees_initial_batch] = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim)
 
 %Global parameters for each tree
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max epsilon_decay
@@ -48,6 +52,9 @@ for i=1:ndim
     pts_dist = [pts_dist; pts_dist_tmp];
 end
 q_pts = createUniformGrid2D(pts_dist, obstacle_coords, lim);
+
+%Number of trees that are being created in the configuration space 
+num_trees_initial_batch = size(q_pts, 1);
 
 for i=1:size(q_pts, 1)
     

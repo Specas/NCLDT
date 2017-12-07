@@ -36,7 +36,7 @@ while sample_num < m
         q_m = [q_m; q_sample];
         plot(ax, q_sample(1), q_sample(2), 'b.');
         %Pause to animate the search.
-        pause(0.0001);
+        pause(0.00000001);
     else
         epsilon_min = epsilon_min * epsilon_decay;
         epsilon_max = epsilon_max * epsilon_decay;

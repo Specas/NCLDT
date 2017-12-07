@@ -42,12 +42,12 @@ while true
     
     %Sampling till a sample in the free space is found.
     q_sample = sampleConfiguration(ndim, lim);
-    while ~isConfigInFree2D(q_sample, obstacle_coords)
+    while ~isConfigInFree2D(q_sample, obstacle_coords, lim)
         q_sample = sampleConfiguration(ndim, lim);
     end
     
     if is_animate
-        pause(0.2);
+        pause(0.0001);
     end
     
     plot(ax, q_sample(1), q_sample(2), 'k.', 'MarkerSize', 15);
