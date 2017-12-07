@@ -52,17 +52,17 @@ global tree_decay
 
 %Default initial parameters.
 alpha_init = 45*pi/180;
-epsilon_max_init = 10;
-epsilon_min_init = 3;
+epsilon_max_init = 0;
+epsilon_min_init = 0;
 m_init = 2;
-rho_init = 0.1;
+rho_init = 0.01;
 tree_energy_init = 100;
 tree_energy_threshold = 70;
 tree_energy_decay_init = 0.9;
 epsilon_decay_init = 0.99;
 k1 = 10^9;
 k2 = 10^-9;
-k3 = 2;
+k3 = 1;
 
 %Matrix to keep track of connectivity between trees
 tree_connectivity = [];

@@ -20,8 +20,12 @@ ndim = 2;
 
 %Creating Obstacle in space.
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
+
+%Draw or load existing obstacle mat
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-load('obstacle_coords1.mat');
+% save('obstacle_coords_single_np3.mat', 'obstacle_coords');
+load('obstacle_coords_single_np2.mat');
+
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
 
