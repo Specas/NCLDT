@@ -3,16 +3,23 @@
 %pivot)
 
 %INPUT
+%energy_max: Max value of energy for a tree.
+%energy_curr: Current value of energy for the tree.
+%epsilon_max: Max value of sampling radius.
+%spread: Spread of the tree (Euclidean distance between successive
+%q_pivots).
 
 %OUTPUT
+%energy: Updated energy for the tree
 
-function [energy] = computeEnergy(energy_max, energy_prev, epsilon_max, spread)
+function [energy] = computeEnergy(energy_max, energy_curr, epsilon_max, spread)
 
+%Weights to weight the contribution of energy and spread on the energy
 weight_energy = 0.005;
 weight_spread = 0.005;
 
-beta = weight_energy * (energy_max - energy_prev) + weight_spread * (epsilon_max - spread);
-disp(beta);
-energy = energy_prev * exp(-beta);
+%Exponent value
+beta = weight_energy * (energy_max - energy_curr) + weight_spread * (epsilon_max - spread);
+energy = energy_curr * exp(-beta);
 
 

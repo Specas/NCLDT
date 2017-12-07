@@ -160,7 +160,7 @@ while ~done
         tree_energy{i} = computeEnergy(tree_energy_init, tree_energy{i}, epsilon_max{i}, spread{i});
         total_tree_energy = total_tree_energy + tree_energy{i};
         
-        fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
+%         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
         path{i} = [path{i}; q_pivot{i}];
         
         if tree_energy{i} < tree_energy_threshold
@@ -194,7 +194,19 @@ while ~done
         for j=size(Tm{i}, 1)
             if isCollisionFreePath2D(Tm{i}(j, :), q_target{i}, obstacle_coords)
                 
-                %Local tree has found a path to its q_target.
+                %Finding the tree that connected.
+                connected_tree_index = findTreeContainingNode(q_target{i}, q_end);
+                tree_connectivity = [tree_connectivity, zeros(size(tree_connectivity, 1), 1)];
+                tree_connectivity = [tree_connectivity; zeros(1, size(tree_connectivity, 2))];
+                %Checking if it connected to q_end
+                if connected_tree_index == -1
+                    
+                else
+                    tree_connectivity(i, connected_tree_index) = 1;
+                    tree_connectivity(connected_tree_index, i) = 1;
+                end
+                
+                %Plotting and appending to path
                 plot(ax, [Tm{i}(j, 1), q_target{i}(1)], [Tm{i}(j, 2), q_target{i}(2)], 'k-');
                 path{i} = [path{i}; Tm{i}(j, :)];
                 path{i} = [path{i}; q_target{i}];
