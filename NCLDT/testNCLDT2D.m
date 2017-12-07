@@ -21,7 +21,7 @@ ndim = 2;
 %Creating Obstacle in space.
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-load('obstacle_coords.mat');
+load('obstacle_coords1.mat');
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
 
@@ -48,11 +48,12 @@ q_pivot = q_root;
 alpha = 45*pi/180;
 epsilon_max = 0;
 epsilon_min = 0;
+epsilon_decay = 0.99;
 m = 5;
-rho_init = 10;
+rho_init = 0.1;
 k1 = 10^5;
 k2 = 10^-5;
-k3 = 10;
+k3 = 5;
 
 %Current direction of growth.
 wt_current = wt;
@@ -65,7 +66,7 @@ done = false;
 while ~done
     
     rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
-    [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords);
+    [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords, lim);
     
     fprintf('%d, %d, %3f\n', size_eta, size_mu, rho_current);
     
@@ -92,7 +93,7 @@ while ~done
     epsilon_min = rho_init;
     epsilon_max = rho_current;
     
-    [T, Tm] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, m, obstacle_coords, ndim);
+    [T, Tm] = growSingleTreeNCLDT(fig, ax, q_pivot, T, wt_current, alpha, epsilon_min, epsilon_max, epsilon_decay, m, obstacle_coords, ndim, lim);
     
     %Plotting pivot node.
     plot(ax, q_pivot(1), q_pivot(2), 'c.');
