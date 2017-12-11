@@ -26,7 +26,7 @@ function [wt, q_target] = computeNewTreeDirection(num_nctrees, num_trees, q_root
 wt = 0;
 q_target = 0;
 fp = 0;
-a = 20;
+a = 1000;
 changed = false;
 
 %If no trees are connected, then the probability of the new node directing
@@ -50,6 +50,8 @@ else
     fp = g1*g2;
     
 end
+
+disp(fp);
 
 %Now wt is computed using the probability values. A value is k is sampled
 %from 1 to 100. If k <= fp*100, wt is set to the direction from the sampled

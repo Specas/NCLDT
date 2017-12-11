@@ -54,7 +54,7 @@ angular_separation = deg2rad(20);
 %For the radial increment, the minimum norm between the min and max limits
 %in each dimension is taken as the relative measure.
 lim_norm = sqrt((lim(:, 1) - lim(:, 2)).^2);
-radial_increment = 1000*num_trees/min(lim_norm);
+radial_increment = 200*num_trees/min(lim_norm);
 
 %Obtaining radial points.
 q_pts = createRadialGrid2D(q_end, angular_separation, radial_increment, obstacle_coords, lim);
