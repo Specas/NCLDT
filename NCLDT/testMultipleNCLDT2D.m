@@ -17,7 +17,6 @@ size_y_min = -100;
 size_y_max = 100;
 
 
-
 lim = [size_x_min, size_x_max; size_y_min, size_y_max];
 ndim = 2;
 
@@ -28,7 +27,7 @@ ndim = 2;
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords3.mat', 'obstacle_coords');
-load('obstacle_coords4.mat');
+load('obstacle_coords2.mat');
 
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -57,7 +56,7 @@ epsilon_min_init = 0;
 m_init = 3;
 rho_init = 1;
 tree_energy_init = 100;
-tree_energy_threshold = 50;
+tree_energy_threshold = 0.3 * tree_energy_init;
 tree_energy_decay_init = 0.9;
 epsilon_decay_init = 0.99;
 k1 = 10^9;
@@ -70,7 +69,8 @@ tree_connectivity = [];
 %Plotting parameters.
 quiver_magn = 5;
 
-%Specify number of initial trees.
+%Specify number of initial trees and a counter to count number of decayed
+%trees.
 num_trees = 16;
 decay_counter = 0;
 
@@ -115,8 +115,8 @@ while ~done
         tree_connectivity = [tree_connectivity; zeros(1, size(tree_connectivity, 2))];
     end
     
-        fprintf('Total Energy: %.3f\n', total_tree_energy);
-%         fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
+    fprintf('Total Energy: %.3f\n', total_tree_energy);
+    %         fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
     
     %Resetting values.
     total_tree_energy = 0;
@@ -142,7 +142,7 @@ while ~done
             %Updating wt_current if the tree can still be grown.
             wt_current{i} = computeGrowthDirection(eta_size{i}, mu_size{i}, wt{i}, ws{i}, k1, k2);
         end
-                
+        
         %The spread is computed as the norm between the previous value of
         %q_pivot and the new value. If it is less, it means that the tree
         %has not spread out much (Energy needs to be decreased).
@@ -160,8 +160,11 @@ while ~done
         tree_energy{i} = computeEnergy(tree_energy_init, tree_energy{i}, epsilon_max{i}, spread{i});
         total_tree_energy = total_tree_energy + tree_energy{i};
         
-%         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
+        %         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
         if tree_connected_end{i} | tree_connected_tree{i}
+            %Once a tree is connected, further nodes will try to connect to
+            %q_start, hence they must be appended before the current path
+            %nodes as the order is from start to end.
             path{i} = [q_pivot{i}; path{i}];
         else
             path{i} = [path{i}; q_pivot{i}];
@@ -193,7 +196,7 @@ while ~done
             [q_n, q_nc] = findDecisionNodes(q_root{i});
             [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{i}, q_n, q_nc, q_end);
         end
-
+        
         %Plotting pivot node.
         plot(ax, q_pivot{i}(1), q_pivot{i}(2), 'c.');
         
@@ -218,10 +221,10 @@ while ~done
                     fprintf('Path Found!\n');
                     break;
                 end
-                      
+                
                 %Check if it connected to the q_end and change the number.
                 %of connected trees.
-                if q_target{i} == q_end
+                if isequal(q_target{i}, q_end)
                     %Connected to the end.
                     tree_connected_end{i} = true;
                     num_nctrees = num_nctrees - 1;
@@ -230,32 +233,21 @@ while ~done
                     tree_connected_tree{i} = true;
                     plot(ax, q_target{i}(1), q_target{i}(2), 'r.', 'MarkerSize', 10);
                 end
-                
-                if tree_connected_end{i} | tree_connected_tree{i}
-                    wt{i} = (q_start - q_root{i})/norm(q_start - q_root{i});
-                    q_target{i} = q_start;
-                    ws{i} = -(q_end - q_root{i})/norm(q_end - q_root{i});
-                end
             end
-            
-            if done
-                break;
-            end
-            
- 
-            
-        %Check if there is a connection between q_start and any of the
-        %connected (end or tree) trees roots.
-%         if isCollisionFreePath2D(q_start, Tm{i}(j, :), obstacle_coords) & (tree_connected_end{i} | tree_connected_tree{i})
-%             %Found a path from the start to one of the connected trees. As
-%             %connected trees are all connected to q_end, it means that a
-%             %path from start to end has been found and the problem has been
-%             %solved.
-%             fprintf('Path Found!\n');
-%             plot(ax, [q_start(1), q_tmp(1)], [q_start(2), q_tmp(2)], 'k-');
-%             done = true;
-%             break;
-%         end
+        end
+        
+        %Once a tree is connected, dont stop it from growing. Instead
+        %change its direction to q_start. Now wt is now calculated using
+        %q_start and ws is calculated using q_end. Hence connected trees
+        %would grow towards the start position
+        if tree_connected_end{i} | tree_connected_tree{i}
+            wt{i} = (q_start - q_root{i})/norm(q_start - q_root{i});
+            q_target{i} = q_start;
+            ws{i} = -(q_end - q_root{i})/norm(q_end - q_root{i});
+        end
+        
+        if done
+            break;
         end
     end
 end
