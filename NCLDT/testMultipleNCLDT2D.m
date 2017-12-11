@@ -27,7 +27,7 @@ ndim = 2;
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords3.mat', 'obstacle_coords');
-load('obstacle_coords2.mat');
+load('obstacle_coords3.mat');
 
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -56,6 +56,7 @@ epsilon_min_init = 0;
 m_init = 3;
 rho_init = 1;
 tree_energy_init = 100;
+%Energy threshold below which the tree is decayed.
 tree_energy_threshold = 0.3 * tree_energy_init;
 tree_energy_decay_init = 0.9;
 epsilon_decay_init = 0.99;
@@ -129,14 +130,10 @@ while ~done
         rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
         [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt_current{i}, ws{i}, obstacle_coords, lim);
         
-        %Non-decay condition.
-        if eta_size{i} == 0 & mu_size{i} == 0
-            tree_decay{i} = true;
-            decay_counter = decay_counter+1;
-            fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
-            
-            %Once the tree has decayed, the algorithm moves on to the next
-            %tree
+        %Non-decay condition. Dont decay if it is already connected.
+        if (eta_size{i} == 0 & mu_size{i} == 0)
+            %Move on to the next tree and wait for this trees energy level
+            %to drop for decaying.
             continue;
         else
             %Updating wt_current if the tree can still be grown.
@@ -160,7 +157,7 @@ while ~done
         tree_energy{i} = computeEnergy(tree_energy_init, tree_energy{i}, epsilon_max{i}, spread{i});
         total_tree_energy = total_tree_energy + tree_energy{i};
         
-        %         fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
+        fprintf('Energy of tree %d: %.3f\n', i, tree_energy{i});
         if tree_connected_end{i} | tree_connected_tree{i}
             %Once a tree is connected, further nodes will try to connect to
             %q_start, hence they must be appended before the current path
@@ -170,7 +167,8 @@ while ~done
             path{i} = [path{i}; q_pivot{i}];
         end
         
-        if tree_energy{i} < tree_energy_threshold
+        %Decay if energy is below the threshold and it is not connected
+        if (tree_energy{i} < tree_energy_threshold) & ~(tree_connected_end{i} | tree_connected_tree{i})
             tree_decay{i} = true;
             decay_counter = decay_counter + 1;
             fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
@@ -250,6 +248,11 @@ while ~done
             break;
         end
     end
+    
+    %Deleting trees and updating count
+    disp(num_trees);
+    [num_trees, num_nctrees] = deleteTrees(num_trees, num_nctrees);
+    disp(num_trees);
 end
 
 

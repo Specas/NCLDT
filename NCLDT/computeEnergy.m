@@ -15,8 +15,8 @@
 function [energy] = computeEnergy(energy_max, energy_curr, epsilon_max, spread)
 
 %Weights to weight the contribution of energy and spread on the energy
-weight_energy = 0.005;
-weight_spread = 0.005;
+weight_energy = 0.05;
+weight_spread = 0.05;
 
 %Exponent value
 beta = weight_energy * (energy_max - energy_curr) + weight_spread * (epsilon_max - spread);

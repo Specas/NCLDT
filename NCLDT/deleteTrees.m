@@ -1,7 +1,17 @@
 %Function to delete a tree by deleting all elements of the required tree
 %index from all global variables
 
-function [] = deleteTrees()
+%INPUT
+%num_trees: Current total number of trees
+%num_nctrees: Current total number of non-connected trees (non end
+%connected)
+
+%OUTPUT
+%num_trees: Total number of trees after deletion
+%num_nctrees: Total number of non-connected trees (non end connected) after
+%deletion
+
+function [num_trees, num_nctrees] = deleteTrees(num_trees, num_nctrees)
 
 %Global variables for the trees.
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max
@@ -47,5 +57,13 @@ spread(remove_array) = [];
 tree_connected_end(remove_array) = [];
 tree_connected_tree(remove_array) = [];
 tree_decay(remove_array) = [];
+
+%Update number of trees and number of non-connected trees by subtracting
+%the number of trees deleted.
+%As connected trees (end or tree connected) cannot be decayed, the number
+%of non-connected trees is updated by simply subtracting the number of
+%trees to be deleted.
+num_trees = num_trees - length(remove_array);
+num_nctrees = num_nctrees - length(remove_array);
 
 
