@@ -13,7 +13,7 @@ function [pts] = createUniformGrid2D(pts_dist, obstacle_coords, lim)
 
 pts = [];
 
-%Currently computing specifically for a 2D case.
+%Creating the grid.
 [X, Y] = ndgrid(lim(1, 1):pts_dist(1):lim(1, 2), lim(2, 1):pts_dist(2):lim(2, 2));
 
 for i=1:size(X, 1)

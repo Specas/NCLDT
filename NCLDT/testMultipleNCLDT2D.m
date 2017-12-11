@@ -27,7 +27,7 @@ ndim = 2;
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords3.mat', 'obstacle_coords');
-load('obstacle_coords3.mat');
+load('obstacle_coords4.mat');
 
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -99,7 +99,8 @@ fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
 %Creating the initial batch of uniformly sampled trees.
-num_trees = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+% num_trees = createNewTreesUniform(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
+num_trees = createNewTreesRadial(q_start, q_end, alpha_init, epsilon_max_init, epsilon_min_init, epsilon_decay_init, m_init, rho_init, tree_energy_init, tree_energy_decay_init, num_trees, num_nctrees, obstacle_coords, ndim, lim);
 
 done = false;
 
@@ -181,7 +182,10 @@ while ~done
         epsilon_min{i} = rho_init;
         epsilon_max{i} = rho_current{i};
         
-        [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
+        %Grow the tree only if energy levels are not below the threshold
+        if tree_energy{i}>= tree_energy_threshold
+            [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
+        end
         
         %wt and q_target is updated (Direction can be changed to connect to a
         %connected tree instead of the target). This is done using the

@@ -22,8 +22,10 @@ function [free] = isConfigInFree2D(q, obstacle_coords, lim)
 free = true;
 
 %Checking for configuration space limits.
-if q(1)< lim(1,1) | q(1)> lim(1,2) | q(2)< lim(2,1) | q(2)>lim(2,2)
-    free = false;
+for i=1:length(q)
+    if q(i) < lim(i, 1) | q(i) > lim(i, 2)
+        free = false;
+    end
 end
 
 for i=1:length(obstacle_coords)
