@@ -54,10 +54,10 @@ epsilon_max = 0;
 epsilon_min = 0;
 epsilon_decay = 0.99;
 m = 5;
-rho_init = 1;
+rho_init = 2;
 k1 = 10^9;
 k2 = 10^-9;
-k3 = 1;
+k3 = 5;
 
 %Current direction of growth.
 wt_current = wt;
