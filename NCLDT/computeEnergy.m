@@ -12,7 +12,7 @@
 %OUTPUT
 %energy: Updated energy for the tree
 
-function [energy] = computeEnergy(energy_max, energy_curr, epsilon_max, spread)
+function [energy] = computeEnergy(energy_max, energy_curr, epsilon_max, delta_spread)
 
 %Weights to weight the contribution of energy and spread on the energy
 weight_energy = 0.05;
@@ -20,6 +20,11 @@ weight_spread = 0.05;
 
 %Exponent value
 beta = weight_energy * (energy_max - energy_curr) + weight_spread * (epsilon_max - spread);
+
 energy = energy_curr * exp(-beta);
+
+if energy>energy_max
+    energy = energy_max;
+end
 
 

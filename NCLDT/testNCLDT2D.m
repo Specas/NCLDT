@@ -31,14 +31,14 @@ load('obstacle_coords_single_np2.mat');
 
 %Selecting the start and end configurations.
 fprintf('Click to select the start configuration.\n');
-q_start = setConfiguration2D(fig, ax);
+q_start = setConfiguration2D(fig, ax, 'g.');
 
 fprintf('Click to select the end configuration.\n');
-q_end = setConfiguration2D(fig, ax);
+q_end = setConfiguration2D(fig, ax, 'm.');
 
 %Selecting tree root location.
 fprintf('Click to select the root configuration.\n');
-q_root = setConfiguration2D(fig, ax);
+q_root = setConfiguration2D(fig, ax, 'k.');
 
 wt = (q_end - q_root)/norm(q_end - q_root);
 ws = -(q_start - q_root)/norm(q_start - q_root);
@@ -58,6 +58,10 @@ rho_init = 2;
 k1 = 10^9;
 k2 = 10^-9;
 k3 = 5;
+tree_energy_init = 100;
+tree_energy = 100;
+tree_energy_threshold = 30;
+spread = 0;
 
 %Current direction of growth.
 wt_current = wt;
@@ -95,15 +99,27 @@ while ~done
         
     fprintf('%d, %d, %.3f\n', size_eta, size_mu, rho_current);
         
-    q_pivot = 0;
-        
-    
     %Finding the nearest node from eta or mu (depending on their values).
     if size_eta == 0
-        q_pivot = findNearestNode(mu, q_root);
+        %Computing spread as the norm of the difference of the old and new
+        %pivot.
+        %delta spread is the previous spread subtracted from the current
+        %spread
+        q_pivot_tmp = findNearestNode(mu, q_root);
+        delta_spread = norm(q_pivot_tmp - q_pivot) - spread;
+        spread = norm(q_pivot_tmp - q_pivot);
+        q_pivot = q_pivot_tmp;
     else
-        q_pivot = findNearestNode(eta, q_root);
+        q_pivot_tmp = findNearestNode(eta, q_root);
+        delta_spread = norm(q_pivot_tmp - q_pivot) - spread;
+        spread = norm(q_pivot_tmp - q_pivot);
+        q_pivot = q_pivot_tmp;
     end
+    
+    %Updating wt based on current pivot node
+    wt = (q_end - q_pivot)/norm(q_end - q_pivot);
+    
+    %Computing energy
     
     path = [path; q_pivot];
     
