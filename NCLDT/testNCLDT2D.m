@@ -54,9 +54,9 @@ epsilon_max = 0;
 epsilon_min = 0;
 epsilon_decay = 0.99;
 m = 5;
-rho_init = 0.1;
-k1 = 10^5;
-k2 = 10^-5;
+rho_init = 1;
+k1 = 10^9;
+k2 = 10^-9;
 k3 = 1;
 
 %Current direction of growth.
@@ -67,22 +67,36 @@ rho_current = rho_init;
 
 done = false;
 
+%Count for the decay condition.
+decay_wait_counter = 0;
+decay_wait_threshold = 100;
+
 while ~done
     
-    rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
     [eta, mu, size_eta, size_mu] = computeNodeGroupDistribution(Tm, rho_current, wt, ws, obstacle_coords, lim);
-    
-    fprintf('%d, %d, %3f\n', size_eta, size_mu, rho_current);
-    
-    q_pivot = 0;
-    
     %Non-decay condition.
     if size_eta == 0 & size_mu == 0
-        fprintf('Decay\n');
-        break;
+        %Increment decay wait counter
+        decay_wait_counter = decay_wait_counter + 1;
+        
+        if decay_wait_counter > decay_wait_threshold
+            %Decay
+            fprintf('Decay\n');
+            break;
+        end
+        epsilon_min = rho_init;
+        epsilon_max = rho_current;
+        rho_current = rho_init;
+        continue;
     else
         wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);
     end
+    rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
+        
+    fprintf('%d, %d, %.3f\n', size_eta, size_mu, rho_current);
+        
+    q_pivot = 0;
+        
     
     %Finding the nearest node from eta or mu (depending on their values).
     if size_eta == 0
