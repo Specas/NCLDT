@@ -4,6 +4,7 @@ clear
 clc
 close all
 
+
 %Adding path.
 addpath(genpath('..\Tools\'));
 
@@ -40,6 +41,8 @@ q_end = setConfiguration2D(fig, ax, 'm.');
 fprintf('Click to select the root configuration.\n');
 q_root = setConfiguration2D(fig, ax, 'k.');
 
+tic
+
 wt = (q_end - q_root)/norm(q_end - q_root);
 ws = -(q_start - q_root)/norm(q_start - q_root);
 
@@ -53,7 +56,7 @@ alpha = 45*pi/180;
 epsilon_max = 0;
 epsilon_min = 0;
 epsilon_decay = 0.99;
-m = 5;
+m = 1;
 rho_init = 2;
 k1 = 10^9;
 k2 = 10^-9;
@@ -146,6 +149,10 @@ while ~done
     end
 end
 
+
+
+[tree_density] = density(path)
+
 %Drawing the final path if a path exists.
 if done
     drawPath(fig, ax, path);
@@ -156,3 +163,4 @@ end
 
 
 
+toc
