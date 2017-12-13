@@ -90,7 +90,7 @@ while ~done
         end
         epsilon_min = rho_init;
         epsilon_max = rho_current;
-        rho_current = rho_init;
+        rho_current = 2*rho_init;
         continue;
     else
         wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);
