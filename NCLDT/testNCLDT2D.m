@@ -24,8 +24,8 @@ ndim = 2;
 
 %Draw or load existing obstacle mat
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-% save('obstacle_coords_single_np3.mat', 'obstacle_coords');
-load('obstacle_coords_single_np2.mat');
+% save('narrowpassage9.mat', 'obstacle_coords');
+load('narrowpassage9.mat');
 
 %Draw filled obstacles
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -56,8 +56,8 @@ alpha = 45*pi/180;
 epsilon_max = 0;
 epsilon_min = 0;
 epsilon_decay = 0.99;
-m = 1;
-rho_init = 2;
+m = 5;
+rho_init = 1;
 k1 = 10^9;
 k2 = 10^-9;
 k3 = 5;
@@ -92,15 +92,15 @@ while ~done
             break;
         end
         epsilon_min = rho_init;
-        epsilon_max = rho_current;
         rho_current = 2*rho_init;
+        epsilon_max = rho_current;
         continue;
     else
         wt_current = computeGrowthDirection(size_eta, size_mu, wt, ws, k1, k2);
     end
     rho_current = computeSearchRadius(rho_init, rho_current, wt, wt_current, k1, k3);
         
-    fprintf('%d, %d, %.3f\n', size_eta, size_mu, rho_current);
+%     fprintf('%d, %d, %.3f\n', size_eta, size_mu, rho_current);
         
     %Finding the nearest node from eta or mu (depending on their values).
     if size_eta == 0
@@ -120,7 +120,7 @@ while ~done
     end
     
     %Updating wt based on current pivot node
-    wt = (q_end - q_pivot)/norm(q_end - q_pivot);
+%     wt = (q_end - q_pivot)/norm(q_end - q_pivot);
     
     %Computing energy
     
@@ -156,11 +156,8 @@ end
 %Drawing the final path if a path exists.
 if done
     drawPath(fig, ax, path);
+    
 end
 
-
-
-
-
-
 toc
+

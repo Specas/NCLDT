@@ -47,7 +47,7 @@ while true
     end
     
     if is_animate
-        pause(0.0001);
+        pause(0.00000001);
     end
     
     plot(ax, q_sample(1), q_sample(2), 'k.', 'MarkerSize', 15);

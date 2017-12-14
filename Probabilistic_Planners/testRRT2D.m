@@ -20,7 +20,8 @@ ndim = 2;
 %Creating Obstacle in space.
 [fig, ax] = initializeFigure2D('2D Space', 'GridOn', [size_x_min size_x_max], [size_y_min, size_y_max]);
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
-load('obstacle_coords4.mat');
+load('narrowpassage9.mat');
+
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
 
@@ -31,6 +32,7 @@ q_start = setConfiguration2D(fig, ax);
 fprintf('Click to select the end configuration.\n');
 q_end = setConfiguration2D(fig, ax);
 
+tic
 %Carrying out RRT.
 [start_nodes, start_connectivity, end_nodes, end_connectivity] = RRT(ax, obstacle_coords, q_start, q_end, ndim, lim, 'Animate');
 
@@ -78,3 +80,4 @@ end
 disp('---------------------------------------------------');
 disp('Path Found');
 disp('---------------------------------------------------');
+toc
