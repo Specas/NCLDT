@@ -42,6 +42,7 @@ global tree_energy tree_energy_decay spread
 global tree_connected_end
 global tree_connected_tree
 global tree_decay
+global tree_decay_count
 
 %Sampling uniformly first
 
@@ -71,6 +72,7 @@ for i=1:size(q_pts, 1)
     eta_size{i} = 0;
     mu_size{i} = 0;
     spread{i} = 0;
+    tree_decay_count{i} = 0;
     tree_connected_end{i} = false;
     tree_connected_tree{i} = false;
     tree_decay{i} = false;

@@ -35,6 +35,7 @@ global tree_energy tree_energy_decay spread
 global tree_connected_end
 global tree_connected_tree
 global tree_decay
+global tree_decay_count
 
 %Initializng paramters for each tree.
 
@@ -44,6 +45,7 @@ eta{end + 1} = [];
 eta_size{end + 1} = 0;
 mu_size{end + 1} = 0;
 spread{end + 1} = 0;
+tree_decay_count{end + 1} = 0;
 tree_connected_end{end + 1} = false;
 tree_connected_tree{end + 1} = false;
 tree_decay{end + 1} = false;

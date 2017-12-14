@@ -27,7 +27,7 @@ ndim = 2;
 %configuration.
 % [fig, ax, obstacle_coords] = createObstacles2D(fig, ax);
 % save('obstacle_coords3.mat', 'obstacle_coords');
-load('obstacle_coords4.mat');
+load('obstacle_coords2.mat');
 
 %Draw filled obstacles.
 [fig, ax] = drawObstacles2D(fig, ax, obstacle_coords, 'Filled');
@@ -38,7 +38,7 @@ load('obstacle_coords4.mat');
 global T Tm path wt ws wt_current rho_current alpha  epsilon_min epsilon_max
 global eta mu eta_size mu_size epsilon_decay
 global m q_root q_target q_pivot
-global tree_energy tree_energy_decay spread
+global tree_energy tree_energy_decay tree_decay_count spread
 %Trees connected to q_end (Flag).
 global tree_connected_end
 %Trees connected to other trees (Flag).
@@ -59,6 +59,7 @@ tree_energy_init = 100;
 %Energy threshold below which the tree is decayed.
 tree_energy_threshold = 0.3 * tree_energy_init;
 tree_energy_decay_init = 0.9;
+tree_decay_count_threshold = 100;
 epsilon_decay_init = 0.99;
 k1 = 10^9;
 k2 = 10^-9;
@@ -88,7 +89,7 @@ T = {}; Tm = {}; path = {}; wt = {}; ws = {}; wt_current = {}; rho_current = {};
 epsilon_min = {}; epsilon_max = {};
 eta = {}; mu = {}; eta_size = {}; mu_size = {};  m = {}; q_root = {}; q_target = {}; q_pivot = {}; epsilon_decay = {};
 tree_connected_end = {}; tree_connected_tree = {}; tree_decay = {};
-tree_energy = {}; tree_energy_decay = {}; spread = {};
+tree_energy = {}; tree_energy_decay = {}; spread = {}; tree_decay_count = {};
 
 
 %Selecting the start and end configurations.
@@ -105,6 +106,7 @@ num_trees = createNewTreesRadial(q_start, q_end, alpha_init, epsilon_max_init, e
 done = false;
 
 while ~done
+   
     
     %Adding trees based on the current energy levels of the system.
     for i=1:round((trees_energy_cap - total_tree_energy)/tree_energy_init)
@@ -118,37 +120,45 @@ while ~done
     end
     
     fprintf('Total Energy: %.3f\n', total_tree_energy);
-    %         fprintf('Trees: %d, Non-connected Trees: %d\n', num_trees, num_nctrees);
     
     %Resetting values.
     total_tree_energy = 0;
-    
+
     for i=1:num_trees
         if tree_decay{i}
             continue
         end
         
-        rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
         [eta{i}, mu{i}, eta_size{i}, mu_size{i}] = computeNodeGroupDistribution(Tm{i}, rho_current{i}, wt_current{i}, ws{i}, obstacle_coords, lim);
-        
         %Non-decay condition. Dont decay if it is already connected.
         if (eta_size{i} == 0 & mu_size{i} == 0)
-            %Move on to the next tree and wait for this trees energy level
-            %to drop for decaying.
-            continue;
+            %Inrement decay counter
+            tree_decay_count{i} = tree_decay_count{i} + 1;
+            
+            if (tree_decay_count{i} > tree_decay_count_threshold) & ~(tree_connected_end{i} | tree_connected_tree{i})
+                %Decay
+                tree_decay{i} = false;
+                continue;
+            end
+            epsilon_min{i} = rho_init;
+            rho_current{i} = 2*rho_init;
+            epsilon_max{i} = rho_current{i};
         else
             %Updating wt_current if the tree can still be grown.
             wt_current{i} = computeGrowthDirection(eta_size{i}, mu_size{i}, wt{i}, ws{i}, k1, k2);
         end
         
+        rho_current{i} = computeSearchRadius(rho_init, rho_current{i}, wt{i}, wt_current{i}, k1, k3);
+            
         %The spread is computed as the norm between the previous value of
         %q_pivot and the new value. If it is less, it means that the tree
         %has not spread out much (Energy needs to be decreased).
-        if eta_size{i} == 0
+        if eta_size{i} == 0 & mu_size{i} ~=0
             q_pivot_tmp = findNearestNode(mu{i}, q_root{i});
             spread{i} = norm(q_pivot_tmp - q_pivot{i});
             q_pivot{i} = q_pivot_tmp;
-        else
+        end
+        if eta_size{i} ~= 0 & mu_size{i} == 0
             q_pivot_tmp = findNearestNode(eta{i}, q_root{i});
             spread{i} = norm(q_pivot_tmp - q_pivot{i});
             q_pivot{i} = q_pivot_tmp;
@@ -168,13 +178,10 @@ while ~done
             path{i} = [path{i}; q_pivot{i}];
         end
         
-        %Decay if energy is below the threshold and it is not connected
-        if (tree_energy{i} < tree_energy_threshold) & ~(tree_connected_end{i} | tree_connected_tree{i})
-            tree_decay{i} = true;
-            decay_counter = decay_counter + 1;
-            fprintf("Decay tree number: %d, Number of decayed trees: %d\n",i, decay_counter);
-            %Dont need to grow the tree if the decay condition is met. The
-            %program moves on to the next tree.
+        %Decay condition again for corner cases.
+        if (tree_decay_count{i} > tree_decay_count_threshold) & ~(tree_connected_end{i} | tree_connected_tree{i})
+            %Decay
+            tree_decay{i} = false;
             continue;
         end
         
@@ -183,9 +190,9 @@ while ~done
         epsilon_max{i} = rho_current{i};
         
         %Grow the tree only if energy levels are not below the threshold
-        if tree_energy{i}>= tree_energy_threshold
+%         if tree_energy{i}>= tree_energy_threshold
             [T{i}, Tm{i}] = growSingleTreeNCLDT(fig, ax, q_pivot{i}, T{i}, wt_current{i}, alpha{i}, epsilon_min{i}, epsilon_max{i}, epsilon_decay{i}, m{i}, obstacle_coords, ndim, lim);
-        end
+%         end
         
         %wt and q_target is updated (Direction can be changed to connect to a
         %connected tree instead of the target). This is done using the
@@ -195,7 +202,7 @@ while ~done
         %is connected, the direction is just the unit vector pointing to
         %q_start
         if ~tree_connected_end{i} & ~tree_connected_tree{i}
-            [q_n, q_nc] = findDecisionNodes(q_root{i});
+            [q_n, q_nc] = findDecisionNodes(q_pivot{i});
             [wt{i}, q_target{i}] = computeNewTreeDirection(num_nctrees, num_trees, q_root{i}, q_n, q_nc, q_end);
         end
         
@@ -251,6 +258,8 @@ while ~done
         if done
             break;
         end
+        
+        wt{i} = (q_start - q_pivot{i})/norm(q_start - q_root{i});
     end
     
     %Deleting trees and updating count
