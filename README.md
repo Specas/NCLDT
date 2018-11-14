@@ -35,21 +35,21 @@ Results for a two dimensional configuration space containing obstacles are shown
 
 ### Dynamic trees
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=10HtPxD481BdC3KtoDZymud2qYby8DsW-" alt="10 armed bandits" width="600" />
+<img src="https://drive.google.com/uc?export=view&id=10HtPxD481BdC3KtoDZymud2qYby8DsW-" alt="tree 1" width="600" />
 </p>
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1_0ih30vUUF_iuHwX1XFr1xx1KdJCytq7" alt="10 armed bandits" width="600" />
+<img src="https://drive.google.com/uc?export=view&id=1_0ih30vUUF_iuHwX1XFr1xx1KdJCytq7" alt="tree 2" width="600" />
 </p>
 
 ### Single tree narrow passage
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1MkYqPlFPn6wn5kL_uTcYMlMSgajv4uLG" alt="10 armed bandits" width="600" />
+<img src="https://drive.google.com/uc?export=view&id=1MkYqPlFPn6wn5kL_uTcYMlMSgajv4uLG" alt="narrow passage" width="600" />
 </p>
 
 ### Multi tree solution
 
 <p align="center">
-<img src="https://drive.google.com/uc?export=view&id=1Y-0p43AsftZNJ2LAZrKLp0qrWtfcRKCg" alt="10 armed bandits" width="600" />
+<img src="https://drive.google.com/uc?export=view&id=1Y-0p43AsftZNJ2LAZrKLp0qrWtfcRKCg" alt="multi tree" width="600" />
 </p>
